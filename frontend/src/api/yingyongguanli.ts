@@ -113,6 +113,21 @@ export async function getAppsForAdmin(
     })
 }
 
+/** 应用聊天生成代码 应用聊天生成代码，需要应用权限 GET /api/v1/apps/chat/gen/code */
+export async function chatToGenCode(
+    // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+    params: API.chatToGenCodeParams,
+    options?: { [key: string]: any }
+) {
+    return request<API.ServerSentEventString[]>('/api/v1/apps/chat/gen/code', {
+        method: 'GET',
+        params: {
+            ...params
+        },
+        ...(options || {})
+    })
+}
+
 /** 获取精选应用列表 分页获取公开的精选应用列表，支持按应用名称搜索 GET /api/v1/apps/featured */
 export async function getFeaturedApps(
     // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

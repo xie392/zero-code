@@ -47,6 +47,7 @@ declare namespace API {
         createTime?: string
         /** 更新时间 */
         updateTime?: string
+        user?: UserVO
     }
 
     type BaseResponseAppVO = {
@@ -95,6 +96,13 @@ declare namespace API {
         code?: number
         data?: UserVO
         message?: string
+    }
+
+    type chatToGenCodeParams = {
+        /** 应用ID */
+        appId: number
+        /** 用户消息 */
+        message: string
     }
 
     type deleteAppByAdminParams = {
@@ -189,6 +197,8 @@ declare namespace API {
         totalRow?: number
         optimizeCountQuery?: boolean
     }
+
+    type ServerSentEventString = true
 
     type updateAppByAdminParams = {
         /** 应用ID */

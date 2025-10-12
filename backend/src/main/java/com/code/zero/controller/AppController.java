@@ -9,10 +9,7 @@ import com.code.zero.constant.AppConstant;
 import com.code.zero.exception.BusinessException;
 import com.code.zero.exception.ErrorCode;
 import com.code.zero.exception.ThrowUtils;
-import com.code.zero.model.dto.app.AppAddRequest;
-import com.code.zero.model.dto.app.AppQueryRequest;
-import com.code.zero.model.dto.app.AppUpdateByAdminRequest;
-import com.code.zero.model.dto.app.AppUpdateRequest;
+import com.code.zero.model.dto.app.*;
 import com.code.zero.model.entity.User;
 import com.code.zero.model.vo.AppVO;
 import com.code.zero.service.UserService;
@@ -271,6 +268,28 @@ public class AppController {
                         .data("")
                         .build()));
     }
+
+
+    /**
+     * 应用部署
+     *
+     * @param appDeployRequest 部署请求
+     * @param request          请求
+     * @return 部署 URL
+     */
+     @Operation(summary = "应用部署", description = "应用部署，需要应用权限")
+    @PostMapping("/deploy")
+    public BaseResponse<String> deployApp(@RequestBody AppDeployRequest appDeployRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(appDeployRequest == null, ErrorCode.PARAMS_ERROR);
+        Long appId = appDeployRequest.getAppId();
+        ThrowUtils.throwIf(appId == null || appId <= 0, ErrorCode.PARAMS_ERROR, "应用 ID 不能为空");
+        // 获取当前登录用户
+        User loginUser = userService.getLoginUser(request);
+        // 调用服务部署应用
+        String deployUrl = appService.deployApp(appId, loginUser);
+        return ResultUtils.success(deployUrl);
+    }
+
 
 
 }
