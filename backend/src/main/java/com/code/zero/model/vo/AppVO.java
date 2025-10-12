@@ -43,7 +43,7 @@ public class AppVO implements Serializable {
     /**
      * 代码生成类型（枚举）
      */
-    @Schema(description = "代码生成类型", example = "react")
+    @Schema(description = "代码生成类型", example = "html")
     private String codeGenType;
 
     /**
@@ -81,6 +81,12 @@ public class AppVO implements Serializable {
      */
     @Schema(description = "更新时间", example = "2024-01-01T10:00:00")
     private LocalDateTime updateTime;
+
+    /**
+     * 创建用户信息
+     */
+     @Schema(description = "创建用户信息")
+    private UserVO user;
 
     @Serial
     private static final long serialVersionUID = 1L;

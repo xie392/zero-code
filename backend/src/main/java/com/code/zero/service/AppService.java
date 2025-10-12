@@ -4,12 +4,14 @@ import com.code.zero.model.dto.app.AppAddRequest;
 import com.code.zero.model.dto.app.AppQueryRequest;
 import com.code.zero.model.dto.app.AppUpdateByAdminRequest;
 import com.code.zero.model.dto.app.AppUpdateRequest;
+import com.code.zero.model.entity.User;
 import com.code.zero.model.vo.AppVO;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
 import com.code.zero.model.entity.App;
 import jakarta.servlet.http.HttpServletRequest;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -127,4 +129,14 @@ public interface AppService extends IService<App> {
      * @param add 是否为创建校验
      */
     void validApp(App app, boolean add);
+
+    /**
+     * 应用对话生成代码
+     *
+     * @param appId     应用 id
+     * @param message   用户消息
+     * @param loginUser 当前登录用户
+     * @return 生成的代码流
+     */
+    Flux<String> chatToGenCode(Long appId, String message, User loginUser);
 }

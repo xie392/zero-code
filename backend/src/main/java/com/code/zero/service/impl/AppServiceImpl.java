@@ -3,15 +3,20 @@ package com.code.zero.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.code.zero.constant.AppConstant;
+import com.code.zero.core.AiCodeGeneratorFacade;
 import com.code.zero.exception.BusinessException;
 import com.code.zero.exception.ErrorCode;
+import com.code.zero.exception.ThrowUtils;
 import com.code.zero.model.dto.app.AppAddRequest;
 import com.code.zero.model.dto.app.AppQueryRequest;
 import com.code.zero.model.dto.app.AppUpdateByAdminRequest;
 import com.code.zero.model.dto.app.AppUpdateRequest;
 import com.code.zero.model.entity.User;
+import com.code.zero.model.enums.CodeGenTypeEnum;
 import com.code.zero.model.enums.UserRoleEnum;
 import com.code.zero.model.vo.AppVO;
+import com.code.zero.model.vo.UserVO;
 import com.code.zero.service.UserService;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
@@ -23,9 +28,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
+import reactor.core.publisher.Flux;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +46,9 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private AiCodeGeneratorFacade aiCodeGeneratorFacade;
 
     @Override
     public long addApp(AppAddRequest appAddRequest, HttpServletRequest request) {
@@ -58,8 +69,11 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         App app = new App();
         BeanUtil.copyProperties(appAddRequest, app);
         app.setUserId(loginUser.getId());
-        app.setCreateTime(LocalDateTime.now());
-        app.setUpdateTime(LocalDateTime.now());
+//        app.setCreateTime(LocalDateTime.now());
+//        app.setUpdateTime(LocalDateTime.now());
+        // 暂时默认多文件模式
+        app.setCodeGenType(CodeGenTypeEnum.MULTI_FILE.getValue());
+
 
         // 4. 校验应用参数
         validApp(app, true);
@@ -84,9 +98,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
 
         // 3. 判断应用是否存在
         App app = this.getById(id);
-        if (app == null) {
-            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
-        }
+        ThrowUtils.throwIf(app == null, ErrorCode.NOT_FOUND_ERROR);
 
         // 4. 仅本人或管理员可删除
         if (!app.getUserId().equals(loginUser.getId()) && !UserRoleEnum.ADMIN.getValue().equals(loginUser.getUserRole())) {
@@ -127,9 +139,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         // 3. 判断应用是否存在
         long id = appUpdateRequest.getId();
         App oldApp = this.getById(id);
-        if (oldApp == null) {
-            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
-        }
+        ThrowUtils.throwIf(oldApp == null, ErrorCode.NOT_FOUND_ERROR);
 
         // 4. 仅本人或管理员可修改
         if (!oldApp.getUserId().equals(loginUser.getId()) && !UserRoleEnum.ADMIN.getValue().equals(loginUser.getUserRole())) {
@@ -139,8 +149,8 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         // 5. 创建更新对象
         App updateApp = new App();
         BeanUtil.copyProperties(appUpdateRequest, updateApp);
-        updateApp.setUpdateTime(LocalDateTime.now());
-
+        // 区分用户主动编辑和系统自动更新的时间
+        updateApp.setEditTime(LocalDateTime.now());
         // 6. 校验应用参数
         validApp(updateApp, false);
 
@@ -177,9 +187,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
     @Override
     public AppVO getAppVO(long id) {
         App app = this.getById(id);
-        if (app == null) {
-            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
-        }
+        ThrowUtils.throwIf(app == null, ErrorCode.NOT_FOUND_ERROR);
         return getAppVO(app);
     }
 
@@ -203,6 +211,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         Page<AppVO> appVOPage = new Page<>(current, size, appPage.getTotalRow());
         List<AppVO> appVOList = getAppVOList(appPage.getRecords());
         appVOPage.setRecords(appVOList);
+
         return appVOPage;
     }
 
@@ -213,7 +222,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
 
         // 构建查询条件 - 只查询精选应用（优先级大于0）
         QueryWrapper queryWrapper = getQueryWrapper(appQueryRequest);
-        queryWrapper.gt("priority", 0);
+        queryWrapper.gt("priority", AppConstant.DEFAULT_APP_PRIORITY);
         queryWrapper.orderBy("priority", false); // 按优先级降序排列
 
         // 分页查询
@@ -251,6 +260,13 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         }
         AppVO appVO = new AppVO();
         BeanUtil.copyProperties(app, appVO);
+        // 关联查询创建用户信息
+        Long userId = app.getId();
+        if (userId != null) {
+            User user = userService.getById(userId);
+            UserVO userVO = userService.getUserVO(user);
+            appVO.setUser(userVO);
+        }
         return appVO;
     }
 
@@ -312,4 +328,27 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "初始化提示词过长");
         }
     }
+
+    @Override
+    public Flux<String> chatToGenCode(Long appId, String message, User loginUser) {
+        // 1. 参数校验
+        ThrowUtils.throwIf(appId == null || appId <= 0, ErrorCode.PARAMS_ERROR, "应用 ID 不能为空");
+        ThrowUtils.throwIf(StrUtil.isBlank(message), ErrorCode.PARAMS_ERROR, "用户消息不能为空");
+        // 2. 查询应用信息
+        App app = this.getById(appId);
+        ThrowUtils.throwIf(app == null, ErrorCode.NOT_FOUND_ERROR, "应用不存在");
+        // 3. 验证用户是否有权限访问该应用，仅本人可以生成代码
+        if (!app.getUserId().equals(loginUser.getId())) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "无权限访问该应用");
+        }
+        // 4. 获取应用的代码生成类型
+        String codeGenTypeStr = app.getCodeGenType();
+        CodeGenTypeEnum codeGenTypeEnum = CodeGenTypeEnum.getEnumByValue(codeGenTypeStr);
+        if (codeGenTypeEnum == null) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "不支持的代码生成类型");
+        }
+        // 5. 调用 AI 生成代码
+        return aiCodeGeneratorFacade.generateAndSaveCodeStream(message, codeGenTypeEnum, appId);
+    }
+
 }
