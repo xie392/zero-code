@@ -261,7 +261,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         AppVO appVO = new AppVO();
         BeanUtil.copyProperties(app, appVO);
         // 关联查询创建用户信息
-        Long userId = app.getId();
+        Long userId = app.getUserId();
         if (userId != null) {
             User user = userService.getById(userId);
             UserVO userVO = userService.getUserVO(user);
