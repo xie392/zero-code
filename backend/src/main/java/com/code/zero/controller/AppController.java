@@ -34,7 +34,7 @@ import java.util.Map;
  */
 @Tag(name = "应用管理", description = "应用相关的增删改查操作")
 @RestController
-@RequestMapping("/api/v1/apps")
+@RequestMapping("/apps")
 public class AppController {
 
     @Autowired
@@ -277,7 +277,7 @@ public class AppController {
      * @param request          请求
      * @return 部署 URL
      */
-     @Operation(summary = "应用部署", description = "应用部署，需要应用权限")
+    @Operation(summary = "应用部署", description = "应用部署，需要应用权限")
     @PostMapping("/deploy")
     public BaseResponse<String> deployApp(@RequestBody AppDeployRequest appDeployRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(appDeployRequest == null, ErrorCode.PARAMS_ERROR);

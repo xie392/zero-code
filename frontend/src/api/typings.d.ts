@@ -6,6 +6,11 @@ declare namespace API {
         initPrompt: string
     }
 
+    type AppDeployRequest = {
+        /** 应用ID */
+        appId: number
+    }
+
     type AppUpdateByAdminRequest = {
         /** 应用ID */
         id: number
@@ -83,6 +88,12 @@ declare namespace API {
     type BaseResponsePageUserVO = {
         code?: number
         data?: PageUserVO
+        message?: string
+    }
+
+    type BaseResponseString = {
+        code?: number
+        data?: string
         message?: string
     }
 
@@ -199,6 +210,11 @@ declare namespace API {
     }
 
     type ServerSentEventString = true
+
+    type serveStaticResourceParams = {
+        /** 应用部署标识 */
+        deployKey: string
+    }
 
     type updateAppByAdminParams = {
         /** 应用ID */

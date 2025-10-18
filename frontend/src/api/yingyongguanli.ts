@@ -2,9 +2,9 @@
 /* eslint-disable */
 import request from '@/utils/request'
 
-/** 创建应用 创建一个新的应用，需要提供应用名称和初始化提示 POST /api/v1/apps */
+/** 创建应用 创建一个新的应用，需要提供应用名称和初始化提示 POST /apps */
 export async function createApp(body: API.AppAddRequest, options?: { [key: string]: any }) {
-    return request<API.BaseResponseLong>('/api/v1/apps', {
+    return request<API.BaseResponseLong>('/apps', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -14,21 +14,21 @@ export async function createApp(body: API.AppAddRequest, options?: { [key: strin
     })
 }
 
-/** 获取应用详情 根据应用ID获取应用的详细信息 GET /api/v1/apps/${param0} */
+/** 获取应用详情 根据应用ID获取应用的详细信息 GET /apps/${param0} */
 export async function getApp(
     // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
     params: API.getAppParams,
     options?: { [key: string]: any }
 ) {
     const { id: param0, ...queryParams } = params
-    return request<API.BaseResponseAppVO>(`/api/v1/apps/${param0}`, {
+    return request<API.BaseResponseAppVO>(`/apps/${param0}`, {
         method: 'GET',
         params: { ...queryParams },
         ...(options || {})
     })
 }
 
-/** 更新应用 更新指定应用的信息，只能更新自己创建的应用 PUT /api/v1/apps/${param0} */
+/** 更新应用 更新指定应用的信息，只能更新自己创建的应用 PUT /apps/${param0} */
 export async function updateApp(
     // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
     params: API.updateAppParams,
@@ -36,7 +36,7 @@ export async function updateApp(
     options?: { [key: string]: any }
 ) {
     const { id: param0, ...queryParams } = params
-    return request<API.BaseResponseBoolean>(`/api/v1/apps/${param0}`, {
+    return request<API.BaseResponseBoolean>(`/apps/${param0}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -47,21 +47,21 @@ export async function updateApp(
     })
 }
 
-/** 删除应用 删除指定的应用，只能删除自己创建的应用 DELETE /api/v1/apps/${param0} */
+/** 删除应用 删除指定的应用，只能删除自己创建的应用 DELETE /apps/${param0} */
 export async function deleteApp(
     // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
     params: API.deleteAppParams,
     options?: { [key: string]: any }
 ) {
     const { id: param0, ...queryParams } = params
-    return request<API.BaseResponseBoolean>(`/api/v1/apps/${param0}`, {
+    return request<API.BaseResponseBoolean>(`/apps/${param0}`, {
         method: 'DELETE',
         params: { ...queryParams },
         ...(options || {})
     })
 }
 
-/** 管理员更新应用 管理员更新指定应用信息，需要管理员权限 PUT /api/v1/apps/${param0}/admin */
+/** 管理员更新应用 管理员更新指定应用信息，需要管理员权限 PUT /apps/${param0}/admin */
 export async function updateAppByAdmin(
     // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
     params: API.updateAppByAdminParams,
@@ -69,7 +69,7 @@ export async function updateAppByAdmin(
     options?: { [key: string]: any }
 ) {
     const { id: param0, ...queryParams } = params
-    return request<API.BaseResponseBoolean>(`/api/v1/apps/${param0}/admin`, {
+    return request<API.BaseResponseBoolean>(`/apps/${param0}/admin`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -80,27 +80,27 @@ export async function updateAppByAdmin(
     })
 }
 
-/** 管理员删除应用 管理员删除指定应用，需要管理员权限 DELETE /api/v1/apps/${param0}/admin */
+/** 管理员删除应用 管理员删除指定应用，需要管理员权限 DELETE /apps/${param0}/admin */
 export async function deleteAppByAdmin(
     // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
     params: API.deleteAppByAdminParams,
     options?: { [key: string]: any }
 ) {
     const { id: param0, ...queryParams } = params
-    return request<API.BaseResponseBoolean>(`/api/v1/apps/${param0}/admin`, {
+    return request<API.BaseResponseBoolean>(`/apps/${param0}/admin`, {
         method: 'DELETE',
         params: { ...queryParams },
         ...(options || {})
     })
 }
 
-/** 管理员获取应用列表 管理员分页获取所有应用列表，需要管理员权限 GET /api/v1/apps/admin */
+/** 管理员获取应用列表 管理员分页获取所有应用列表，需要管理员权限 GET /apps/admin */
 export async function getAppsForAdmin(
     // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
     params: API.getAppsForAdminParams,
     options?: { [key: string]: any }
 ) {
-    return request<API.BaseResponsePageAppVO>('/api/v1/apps/admin', {
+    return request<API.BaseResponsePageAppVO>('/apps/admin', {
         method: 'GET',
         params: {
             // pageNum has a default value: 1
@@ -113,13 +113,13 @@ export async function getAppsForAdmin(
     })
 }
 
-/** 应用聊天生成代码 应用聊天生成代码，需要应用权限 GET /api/v1/apps/chat/gen/code */
+/** 应用聊天生成代码 应用聊天生成代码，需要应用权限 GET /apps/chat/gen/code */
 export async function chatToGenCode(
     // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
     params: API.chatToGenCodeParams,
     options?: { [key: string]: any }
 ) {
-    return request<API.ServerSentEventString[]>('/api/v1/apps/chat/gen/code', {
+    return request<API.ServerSentEventString[]>('/apps/chat/gen/code', {
         method: 'GET',
         params: {
             ...params
@@ -128,13 +128,25 @@ export async function chatToGenCode(
     })
 }
 
-/** 获取精选应用列表 分页获取公开的精选应用列表，支持按应用名称搜索 GET /api/v1/apps/featured */
+/** 应用部署 应用部署，需要应用权限 POST /apps/deploy */
+export async function deployApp(body: API.AppDeployRequest, options?: { [key: string]: any }) {
+    return request<API.BaseResponseString>('/apps/deploy', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: body,
+        ...(options || {})
+    })
+}
+
+/** 获取精选应用列表 分页获取公开的精选应用列表，支持按应用名称搜索 GET /apps/featured */
 export async function getFeaturedApps(
     // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
     params: API.getFeaturedAppsParams,
     options?: { [key: string]: any }
 ) {
-    return request<API.BaseResponsePageAppVO>('/api/v1/apps/featured', {
+    return request<API.BaseResponsePageAppVO>('/apps/featured', {
         method: 'GET',
         params: {
             // pageNum has a default value: 1
@@ -147,13 +159,13 @@ export async function getFeaturedApps(
     })
 }
 
-/** 获取我的应用列表 分页获取当前用户创建的应用列表，支持按应用名称搜索 GET /api/v1/apps/my */
+/** 获取我的应用列表 分页获取当前用户创建的应用列表，支持按应用名称搜索 GET /apps/my */
 export async function getMyApps(
     // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
     params: API.getMyAppsParams,
     options?: { [key: string]: any }
 ) {
-    return request<API.BaseResponsePageAppVO>('/api/v1/apps/my', {
+    return request<API.BaseResponsePageAppVO>('/apps/my', {
         method: 'GET',
         params: {
             // pageNum has a default value: 1
