@@ -14,6 +14,7 @@ import com.code.zero.model.entity.User;
 import com.code.zero.model.vo.AppVO;
 import com.code.zero.service.UserService;
 import com.mybatisflex.core.paginate.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ import java.util.Map;
  * @author <a href="https://github.com/xie392">xie392</a>
  */
 @Tag(name = "应用管理", description = "应用相关的增删改查操作")
+@Slf4j
 @RestController
 @RequestMapping("/apps")
 public class AppController {
@@ -252,6 +254,7 @@ public class AppController {
         ThrowUtils.throwIf(StrUtil.isBlank(message), ErrorCode.PARAMS_ERROR, "用户消息不能为空");
         // 获取当前登录用户
         User loginUser = userService.getLoginUser(request);
+        log.info("用户 {} 向应用 {} 发送消息: {}", loginUser.getId(), appId, message);
         // 调用服务生成代码（流式）
         Flux<String> contentFlux = appService.chatToGenCode(appId, message, loginUser);
         // 转换为 ServerSentEvent 格式

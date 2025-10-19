@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useUserStore } from '@/stores/user'
 
 const request = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL + '/api',
+    baseURL: import.meta.env.VITE_BASE_URL,
     timeout: 100000,
     headers: {
         'Content-Type': 'application/json'

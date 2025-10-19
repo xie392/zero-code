@@ -8,12 +8,12 @@ declare namespace API {
 
     type AppDeployRequest = {
         /** 应用ID */
-        appId: number
+        appId: string
     }
 
     type AppUpdateByAdminRequest = {
         /** 应用ID */
-        id: number
+        id: string
         /** 应用名称 */
         appName?: string
         /** 应用封面URL */
@@ -24,14 +24,14 @@ declare namespace API {
 
     type AppUpdateRequest = {
         /** 应用ID */
-        id: number
+        id: string
         /** 应用名称 */
         appName: string
     }
 
     type AppVO = {
         /** 应用ID */
-        id?: number
+        id?: string
         /** 应用名称 */
         appName?: string
         /** 应用封面URL */
@@ -111,28 +111,28 @@ declare namespace API {
 
     type chatToGenCodeParams = {
         /** 应用ID */
-        appId: number
+        appId: string
         /** 用户消息 */
         message: string
     }
 
     type deleteAppByAdminParams = {
         /** 应用ID */
-        id: number
+        id: string
     }
 
     type deleteAppParams = {
         /** 应用ID */
-        id: number
+        id: string
     }
 
     type DeleteRequest = {
-        id?: number
+        id?: string
     }
 
     type getAppParams = {
         /** 应用ID */
-        id: number
+        id: string
     }
 
     type getAppsForAdminParams = {
@@ -218,12 +218,12 @@ declare namespace API {
 
     type updateAppByAdminParams = {
         /** 应用ID */
-        id: number
+        id: string
     }
 
     type updateAppParams = {
         /** 应用ID */
-        id: number
+        id: string
     }
 
     type User = {

@@ -27,6 +27,7 @@ import com.code.zero.model.entity.App;
 import com.code.zero.mapper.AppMapper;
 import com.code.zero.service.AppService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;

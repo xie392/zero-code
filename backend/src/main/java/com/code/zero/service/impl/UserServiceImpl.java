@@ -117,13 +117,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>  implements U
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
         if (currentUser == null || currentUser.getId() == null) {
-            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户未登录");
         }
         // 从数据库查询（追求性能的话可以注释，直接返回上述结果）
         long userId = currentUser.getId();
         currentUser = this.getById(userId);
         if (currentUser == null) {
-            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户未登录");
         }
         return currentUser;
     }
