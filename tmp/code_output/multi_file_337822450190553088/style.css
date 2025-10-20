@@ -1,0 +1,5 @@
+/* style.css */
+body { font-family: Arial, sans-serif; margin: 20px; transition: background 0.3s, color 0.3s; }
+.dark { background: #333; color: #fff; }
+h1 { color: inherit; }
+button { padding: 10px; margin-top: 10px; }

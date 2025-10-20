@@ -178,7 +178,7 @@ export default function AppPage() {
             </Card>
 
             {/* 我的应用 */}
-            <Section title="我的作品" description="我创建的应用列表">
+            {/* <Section title="我的作品" description="我创建的应用列表">
                 <div className="flex items-center gap-2 mb-4">
                     <div className="relative flex-1 max-w-sm">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -210,11 +210,11 @@ export default function AppPage() {
                         onPageChange={setMyAppsPage}
                     />
                 )}
-            </Section>
+            </Section> */}
 
             {/* 精选应用 */}
             <Section title="精选案例" description="公开的优质示例应用">
-                <div className="flex items-center gap-2 mb-4">
+                {/* <div className="flex items-center gap-2 mb-4">
                     <div className="relative flex-1 max-w-sm">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                         <Input
@@ -230,7 +230,7 @@ export default function AppPage() {
                     >
                         搜索
                     </Button>
-                </div>
+                </div> */}
                 
                 {featuredAppsLoading ? (
                     <GridSkeleton />
@@ -273,7 +273,7 @@ function GridCards({ apps, emptyText }: { apps: API.AppVO[]; emptyText?: string 
     
     if (!apps?.length) {
         return (
-            <div className="rounded-lg border p-6 text-center text-muted-foreground">
+            <div className="rounded-lg p-6 text-center text-muted-foreground">
                 {emptyText || '暂无数据'}
             </div>
         )

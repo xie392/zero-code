@@ -10,7 +10,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ArrowLeft, Send, Rocket, Code, Eye, Copy, Download, Loader2, User, Bot } from 'lucide-react'
 import { toast } from 'sonner'
-import { getApp, deployApp } from '@/api/yingyongguanli'
+import { getApp, deployApp, chatToGenCode } from '@/api/yingyongguanli'
 
 interface Message {
     id: string
@@ -100,63 +100,60 @@ export default function ChatPage() {
         setMessages((prev) => [...prev, assistantMessage])
 
         try {
-            // 创建SSE连接，添加 withCredentials 以携带认证信息
-            const eventSource = new EventSource(
-                `${import.meta.env.VITE_BASE_URL}/apps/chat/gen/code?appId=${id}&message=${encodeURIComponent(currentMessage)}`,
-                { withCredentials: true }
-            )
+            // 使用 chatToGenCode API 方法
+            const response = await chatToGenCode({
+                appId: id,
+                message: currentMessage
+            })
 
             let fullCode = ''
-            let assistantContent = ''
-
-            eventSource.onmessage = (event) => {
-                try {
-                    // 解析后端返回的JSON格式数据
-                    const jsonData = JSON.parse(event.data)
-                    const chunk = jsonData.d
-                    
-                    if (chunk) {
-                        fullCode += chunk
-                        assistantContent += chunk
-
-                        // 更新助手消息内容
-                        setMessages((prev) =>
-                            prev.map((msg) =>
-                                msg.id === assistantMessageId
-                                    ? { ...msg, content: '正在生成代码...\n\n```html\n' + fullCode + '\n```' }
-                                    : msg
-                            )
-                        )
-
-                        // 实时更新代码预览
-                        setGeneratedCode(fullCode)
+            
+            // 处理响应数据 - 由于类型定义问题，需要使用 any 类型
+            const responseData = response.data as any
+            
+            if (responseData) {
+                // 如果是数组格式的流式数据
+                if (Array.isArray(responseData)) {
+                    for (const item of responseData) {
+                        if (typeof item === 'string') {
+                            // 解析每个数据项，格式可能是 "data:{\"d\":\"文本\"}"
+                            if (item.startsWith('data:')) {
+                                try {
+                                    const jsonStr = item.substring(5) // 移除 "data:" 前缀
+                                    const data = JSON.parse(jsonStr)
+                                    if (data.d) {
+                                        fullCode += data.d
+                                    }
+                                } catch (error) {
+                                    console.error('解析数据项失败:', error, item)
+                                }
+                            } else {
+                                // 如果不是特殊格式，直接添加
+                                fullCode += item
+                            }
+                        }
                     }
-                } catch (error) {
-                    console.error('解析SSE数据失败:', error)
+                } else if (typeof responseData === 'string') {
+                    // 如果是字符串格式，按行分割处理
+                    const lines = responseData.split('\n')
+                    for (const line of lines) {
+                        if (line.startsWith('data:')) {
+                            try {
+                                const jsonStr = line.substring(5)
+                                const data = JSON.parse(jsonStr)
+                                if (data.d) {
+                                    fullCode += data.d
+                                }
+                            } catch (error) {
+                                console.error('解析数据行失败:', error, line)
+                            }
+                        }
+                    }
                 }
             }
 
-            eventSource.onerror = (error) => {
-                console.error('SSE连接错误:', error)
-                eventSource.close()
-                setIsGenerating(false)
-
-                // 更新错误消息
-                setMessages((prev) =>
-                    prev.map((msg) =>
-                        msg.id === assistantMessageId
-                            ? { ...msg, content: '抱歉，代码生成过程中出现了错误，请重试。' }
-                            : msg
-                    )
-                )
-                toast.error('代码生成失败，请重试')
-            }
-
-            eventSource.addEventListener('done', () => {
-                eventSource.close()
-                setIsGenerating(false)
-
-                // 最终更新助手消息
+            // 更新消息和生成的代码
+            if (fullCode) {
                 setMessages((prev) =>
                     prev.map((msg) =>
                         msg.id === assistantMessageId
@@ -164,12 +161,19 @@ export default function ChatPage() {
                             : msg
                     )
                 )
-
+                setGeneratedCode(fullCode)
                 toast.success('代码生成完成！')
-            })
+            } else {
+                setMessages((prev) =>
+                    prev.map((msg) =>
+                        msg.id === assistantMessageId
+                            ? { ...msg, content: '代码生成完成，但没有返回内容。' }
+                            : msg
+                    )
+                )
+            }
         } catch (error) {
             console.error('发送消息失败:', error)
-            setIsGenerating(false)
 
             // 更新错误消息
             setMessages((prev) =>
@@ -178,6 +182,8 @@ export default function ChatPage() {
                 )
             )
             toast.error('发送消息失败')
+        } finally {
+            setIsGenerating(false)
         }
     }
 
@@ -197,7 +203,7 @@ export default function ChatPage() {
         try {
             const response = await deployApp({ appId: id })
             if (response.data.code === 0) {
-                const url = response.data.data
+                const url = response.data.data || ''
                 setDeployUrl(url)
                 toast.success('部署成功！应用已上线')
 
