@@ -128,7 +128,8 @@ export default function AppPage() {
     }, [])
 
     return (
-        <div className="container mx-auto max-w-7xl px-4 py-8 space-y-10">
+        <div className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900">
+            <div className="container mx-auto max-w-7xl px-4 py-20 space-y-10">
             {/* 标题和描述 */}
             <div className="text-center space-y-4">
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-500 via-green-500 to-yellow-500 bg-clip-text text-transparent">
@@ -246,6 +247,7 @@ export default function AppPage() {
                     />
                 )}
             </Section>
+            </div>
         </div>
     )
 }

@@ -9,7 +9,6 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
@@ -33,7 +32,7 @@ export function Header() {
 
     return (
         <header className="w-full h-14 bg-white dark:bg-slate-900 bg-opacity-85 sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto h-full flex items-center justify-between px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto h-full flex items-center justify-between px-4 sm:px-6 lg:px-8">
                 <Logo />
 
                 <nav className="hidden md:flex items-center space-x-8 flex-1 ml-10">
