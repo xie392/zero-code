@@ -6,6 +6,10 @@ import { Toaster } from "@/components/ui/sonner";
 import Providers from "./providers";
 import Hydration from "./hydration";
 
+import QueryProvider from "@/components/providers/query-provider";
+import QueryHydrationProvider from "@/components/providers/query-hydration-provider";
+import AuthProvider from "@/components/providers/auth-provider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -32,9 +36,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>
-          <Hydration>{children}</Hydration>
-        </Providers>
+        <QueryProvider>
+          <QueryHydrationProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </QueryHydrationProvider>
+        </QueryProvider>
         <Toaster position="top-center" visibleToasts={3} closeButton />
       </body>
     </html>

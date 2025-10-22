@@ -1,5 +1,4 @@
 import { createPersistStore } from "@/lib/create-store";
-// import { getLoginUser, userLogout } from "@/api/yonghuguanli";
 
 export interface UserState {
   user: API.UserLoginUserVO;
@@ -19,20 +18,29 @@ export const useUserStore = createPersistStore(
      * @returns
      */
     getLoginUser: async () => {
-    //   const res = await getLoginUser();
-    //   if (res.data.code === 0) {
-    //     const { update } = get();
-    //     update({ user: res.data.data, isLogined: true });
-    //   }
+      //   const res = await getLoginUser();
+      //   if (res.data.code === 0) {
+      //     const { update } = get();
+      //     update({ user: res.data.data, isLogined: true });
+      //   }
+    },
+    /**
+     * 重置用户状态
+     * 用于在用户手动退出登录后，重置用户状态
+     */
+    reset: () => {
+      const { update } = get();
+      update(initUserState);
     },
     /**
      * 退出登录
      */
     logout: async () => {
-    //   await userLogout();
+      //   await userLogout();
       const { update } = get();
-      update({ user: {}, isLogined: false });
-      location.reload();
+      update(initUserState);
+      // reset();
+      location.replace("/login");
     },
   }),
   {

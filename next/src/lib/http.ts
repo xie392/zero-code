@@ -1,4 +1,6 @@
 "use client";
+import { useUserStore } from "@/stores";
+
 type RequestInterceptor = (
   options: ExtendedRequestInit
 ) => void | Promise<void>;
@@ -79,7 +81,8 @@ addResponseInterceptor(async (response) => {
   const data = await clonedResponse.json();
   // 处理 401 错误
   if (data.code === 40100) {
-    window.location.href = "/login";
+    const { logout } = useUserStore.getState();
+    await logout();
   }
 });
 
