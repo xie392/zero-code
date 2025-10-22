@@ -13,6 +13,8 @@
 *.sln
 *.sw?
 
+node_modules/*
+
 # Backend (Java/Spring Boot)
 backend/target/
 backend/.mvn/wrapper/maven-wrapper.jar
