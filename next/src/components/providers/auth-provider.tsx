@@ -3,7 +3,7 @@ import { useUserStore } from "@/stores";
 import { redirect, usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-const WHITE_LIST = ["/login", "/register", "/"];
+const WHITE_LIST = ["/login", "/register", "/", "/about"];
 
 export default function AuthProvider({
   children,

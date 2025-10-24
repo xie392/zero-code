@@ -14,11 +14,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserStore } from "@/stores";
 
 import Link from "next/link";
-import { Home, Info } from "lucide-react";
+import { Home, Info, AppWindowMac } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 const navigationItems = [
   { name: "首页", path: "/", icon: Home },
+  { name: "应用", path: "/apps", icon: AppWindowMac },
   { name: "关于", path: "/about", icon: Info },
 ];
 
@@ -48,6 +49,7 @@ export function SiteAppHeader() {
                   : "hover:text-primary/90"
               )}
             >
+              <item.icon className="size-4 mr-1.5"  />
               {item.name}
             </Link>
           ))}
