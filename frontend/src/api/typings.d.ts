@@ -126,9 +126,8 @@ declare namespace API {
         id: number
     }
 
-    type deleteUserParams = {
-        /** 用户ID */
-        id: number
+    type DeleteRequest = {
+        id?: number
     }
 
     type getAppParams = {
@@ -171,11 +170,6 @@ declare namespace API {
     type getUserVOByIdParams = {
         /** 用户ID */
         id: number
-    }
-
-    type listUserVOByPageParams = {
-        /** 用户查询请求参数 */
-        userQueryRequest: UserQueryRequest
     }
 
     type LoginUserVO = {
@@ -229,11 +223,6 @@ declare namespace API {
 
     type updateAppParams = {
         /** 应用ID */
-        id: number
-    }
-
-    type updateUserParams = {
-        /** 用户ID */
         id: number
     }
 
