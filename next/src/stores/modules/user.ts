@@ -1,7 +1,7 @@
 import { createPersistStore } from '@/lib/create-store'
 
 export interface UserState {
-  user: API.UserLoginUserVO
+  user: API.User
   isLogined: boolean
 }
 

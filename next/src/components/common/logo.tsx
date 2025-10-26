@@ -1,18 +1,20 @@
-import { cn } from '@/lib/utils'
-import Link from 'next/link'
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import LogoSvg from "@/assets/logo.png";
+import Image from "next/image";
 
 interface LogoProps extends React.HTMLAttributes<HTMLAnchorElement> {
-  className?: string
+  className?: string;
 }
 
 export function Logo({ className, ...props }: LogoProps) {
   return (
-    <Link {...props} href="/app">
-      <img
-        src="/logo.png"
+    <Link {...props} href="/">
+      <Image
+        src={LogoSvg}
         alt="logo"
-        className={cn('w-auto h-4.5', className)}
+        className={cn("w-auto h-5", className)}
       />
     </Link>
-  )
+  );
 }

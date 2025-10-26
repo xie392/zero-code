@@ -1,58 +1,60 @@
-'use client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Logo } from '@/components/common/logo'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+"use client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Logo } from "@/components/common/logo";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form'
-import { loginUserApi } from '@/api/user'
-import { useUserStore } from '@/stores'
-import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+} from "@/components/ui/form";
+import { useUserStore } from "@/stores";
+
+import { signIn } from "@/lib/auth-client";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 const formSchema = z.object({
-  userAccount: z
-    .string()
-    .min(1, {
-      message: '请输入用户名',
-    })
-    .describe('用户名'),
-  userPassword: z
-    .string()
-    .min(1, {
-      message: '请输入密码',
-    })
-    .describe('密码'),
-})
+  email: z.string().pipe(z.email("请输入有效的邮箱地址")),
+  password: z.string().min(1, {
+    message: "请输入密码",
+  }),
+});
 
-function SignInPage() {
+export default function LoginPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userAccount: '',
-      userPassword: '',
+      email: "",
+      password: "",
     },
-  })
-  const update = useUserStore((state) => state.update)
-  const router = useRouter()
+  });
+
+  const update = useUserStore((state) => state.update);
+  const router = useRouter();
+  const params = useSearchParams();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const res = await loginUserApi(values)
-    if (res.code === 0) {
-      update({ user: res.data, isLogined: true })
-      router.push('/')
-      return
-    }
-    toast(res.message)
-  }
+    await signIn.email(
+      {
+        ...values,
+      },
+      {
+        onSuccess: (ctx) => {
+          update({ user: ctx.data });
+          router.push(params.get("redirect") || "/");
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message);
+        },
+      }
+    );
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-10">
@@ -65,11 +67,11 @@ function SignInPage() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="userAccount"
+              name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="用户名" {...field} />
+                    <Input placeholder="邮箱" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -77,7 +79,7 @@ function SignInPage() {
             />
             <FormField
               control={form.control}
-              name="userPassword"
+              name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -95,13 +97,11 @@ function SignInPage() {
 
         <p className="mt-4 text-center text-sm text-gray-600">
           没有账号？
-          <Link href="/sign-up" className="text-blue-600 font-medium">
+          <Link href="/register" className="text-blue-600 font-medium">
             注册
           </Link>
         </p>
       </div>
     </div>
-  )
+  );
 }
-
-export default SignInPage

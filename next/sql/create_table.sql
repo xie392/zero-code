@@ -1,1 +1,1 @@
-CREATE DATABASE zerc;
+CREATE DATABASE zero_code;

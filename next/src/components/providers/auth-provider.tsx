@@ -10,16 +10,16 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode
 }) {
-  const pathname = usePathname()
-  const isLogined = useUserStore((state) => state.isLogined)
-  const reset = useUserStore((state) => state.reset)
+  // const pathname = usePathname()
+  // const isLogined = useUserStore((state) => state.isLogined)
+  // const reset = useUserStore((state) => state.reset)
 
-  useEffect(() => {
-    if (!isLogined && !WHITE_LIST.includes(pathname)) {
-      reset()
-      redirect('/login')
-    }
-  }, [isLogined, pathname])
+  // useEffect(() => {
+  //   if (!isLogined && !WHITE_LIST.includes(pathname)) {
+  //     reset()
+  //     redirect('/login')
+  //   }
+  // }, [isLogined, pathname])
 
   return children
 }

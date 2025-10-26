@@ -9,6 +9,7 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    // requireEmailVerification: true, // 要求邮箱验证才能登录
   },
   plugins: [nextCookies()],
 })
