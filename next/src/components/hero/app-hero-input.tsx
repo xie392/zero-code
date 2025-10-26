@@ -1,4 +1,4 @@
-import { ChatInput } from "@/components/chat/input";
+import { ChatInput } from '@/components/chat/input'
 
 export function AppHeroInput() {
   return (
@@ -9,5 +9,5 @@ export function AppHeroInput() {
       <p className="text-muted-foreground mb-5">与 AI 对话轻松创建应用和网站</p>
       <ChatInput />
     </div>
-  );
+  )
 }

@@ -1,14 +1,14 @@
-import { createPersistStore } from "@/lib/create-store";
+import { createPersistStore } from '@/lib/create-store'
 
 export interface UserState {
-  user: API.UserLoginUserVO;
-  isLogined: boolean;
+  user: API.UserLoginUserVO
+  isLogined: boolean
 }
 
 export const initUserState: UserState = {
   user: {},
   isLogined: false,
-};
+}
 
 export const useUserStore = createPersistStore(
   initUserState,
@@ -29,22 +29,22 @@ export const useUserStore = createPersistStore(
      * 用于在用户手动退出登录后，重置用户状态
      */
     reset: () => {
-      const { update } = get();
-      update(initUserState);
+      const { update } = get()
+      update(initUserState)
     },
     /**
      * 退出登录
      */
     logout: async () => {
       //   await userLogout();
-      const { update } = get();
-      update(initUserState);
+      const { update } = get()
+      update(initUserState)
       // reset();
-      location.replace("/login");
+      location.replace('/login')
     },
   }),
   {
-    name: "user",
+    name: 'user',
     version: 1,
-  }
-);
+  },
+)

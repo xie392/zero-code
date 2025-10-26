@@ -1,6 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { EyeIcon, ThumbsUpIcon } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { EyeIcon, ThumbsUpIcon } from 'lucide-react'
 
 export function AppItem() {
   return (
@@ -16,17 +16,22 @@ export function AppItem() {
         <div className="absolute inset-0 flex flex-col justify-end bg-black/30 p-4 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
           <div className="flex gap-4 translate-y-4 transition-transform duration-500 group-hover:translate-y-0">
             <Button className="flex-1">访问</Button>
-            <Button className="flex-1" variant="outline">详情</Button>
+            <Button className="flex-1" variant="outline">
+              详情
+            </Button>
           </div>
         </div>
       </div>
 
       {/* 内容区 */}
       <div className="space-y-2 py-4">
-        <h3 className="truncate font-semibold text-slate-900 dark:text-white" title="应用名称">
+        <h3
+          className="truncate font-semibold text-slate-900 dark:text-white"
+          title="应用名称"
+        >
           应用名称
         </h3>
-        
+
         {/* 作者与统计行 */}
         <div className="flex items-center justify-between">
           {/* 作者信息 */}
@@ -35,11 +40,14 @@ export function AppItem() {
               <AvatarImage src="https://picsum.photos/100" alt="avatar" />
               <AvatarFallback className="text-xs">中</AvatarFallback>
             </Avatar>
-            <span className="min-w-0 flex-1 truncate text-sm text-slate-600 dark:text-slate-300" title="中分银发帅哥">
+            <span
+              className="min-w-0 flex-1 truncate text-sm text-slate-600 dark:text-slate-300"
+              title="中分银发帅哥"
+            >
               中分银发帅哥
             </span>
           </div>
-          
+
           {/* 统计信息 */}
           <div className="flex items-center gap-6 text-slate-500 dark:text-slate-400">
             <div className="flex items-center gap-1">
@@ -54,5 +62,5 @@ export function AppItem() {
         </div>
       </div>
     </div>
-  );
+  )
 }

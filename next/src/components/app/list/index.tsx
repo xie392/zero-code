@@ -1,4 +1,4 @@
-import { AppItem } from "../../app-list/app-list-item";
+import { AppItem } from '../../app-list/app-list-item'
 
 export function AppList() {
   return (
@@ -12,5 +12,5 @@ export function AppList() {
         ))}
       </div>
     </div>
-  );
+  )
 }

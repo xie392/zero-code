@@ -1,4 +1,3 @@
-
-export default function AppsPage()  {
-    return 'Apps'
+export default function AppsPage() {
+  return 'Apps'
 }

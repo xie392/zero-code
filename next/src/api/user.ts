@@ -1,4 +1,4 @@
-import { request } from "@/lib/http";
+import { request } from '@/lib/http'
 
 /**
  * 获取当前登录用户 获取当前登录用户信息
@@ -7,10 +7,10 @@ import { request } from "@/lib/http";
  */
 export async function loginUserApi(data: API.UserLoginRequest) {
   return request<API.Response<API.UserLoginUserVO>>({
-    url: "/users/login",
-    method: "POST",
+    url: '/users/login',
+    method: 'POST',
     data,
-  });
+  })
 }
 
 /**
@@ -19,7 +19,7 @@ export async function loginUserApi(data: API.UserLoginRequest) {
  */
 export async function loginUserInfoApi() {
   return request<API.Response<API.UserLoginUserVO>>({
-    url: "/users/me",
-    method: "GET",
-  });
+    url: '/users/me',
+    method: 'GET',
+  })
 }

@@ -1,58 +1,58 @@
 'use client'
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Logo } from "@/components/common/logo";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Logo } from '@/components/common/logo'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { loginUserApi } from "@/api/user";
-import { useUserStore } from "@/stores";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+} from '@/components/ui/form'
+import { loginUserApi } from '@/api/user'
+import { useUserStore } from '@/stores'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 const formSchema = z.object({
   userAccount: z
     .string()
     .min(1, {
-      message: "请输入用户名",
+      message: '请输入用户名',
     })
-    .describe("用户名"),
+    .describe('用户名'),
   userPassword: z
     .string()
     .min(1, {
-      message: "请输入密码",
+      message: '请输入密码',
     })
-    .describe("密码"),
-});
+    .describe('密码'),
+})
 
 function SignInPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userAccount: "",
-      userPassword: "",
+      userAccount: '',
+      userPassword: '',
     },
-  });
-  const update = useUserStore((state) => state.update);
-  const router = useRouter();
+  })
+  const update = useUserStore((state) => state.update)
+  const router = useRouter()
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const res = await loginUserApi(values);
+    const res = await loginUserApi(values)
     if (res.code === 0) {
-      update({ user: res.data, isLogined: true });
-      router.push("/");
-      return;
+      update({ user: res.data, isLogined: true })
+      router.push('/')
+      return
     }
-    toast(res.message);
-  };
+    toast(res.message)
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-10">
@@ -101,7 +101,7 @@ function SignInPage() {
         </p>
       </div>
     </div>
-  );
+  )
 }
 
-export default SignInPage;
+export default SignInPage

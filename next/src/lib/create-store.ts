@@ -1,7 +1,7 @@
-import { create } from "zustand";
-import { combine, persist } from "zustand/middleware";
+import { create } from 'zustand'
+import { combine, persist } from 'zustand/middleware'
 
-type Updater<T> = (arg: Partial<T>) => void;
+type Updater<T> = (arg: Partial<T>) => void
 
 type SecondParam<T> = T extends (
   _f: infer _F,
@@ -9,25 +9,25 @@ type SecondParam<T> = T extends (
   ...args: infer _U
 ) => any
   ? S
-  : never;
+  : never
 
 export type MakeUpdater<T> = {
-  lastUpdateTime: number;
-  update: Updater<T>;
-};
+  lastUpdateTime: number
+  update: Updater<T>
+}
 
 export type SetStoreState<T> = (
   partial: T | Partial<T> | ((state: T) => T | Partial<T>),
-  replace?: boolean | undefined
-) => void;
+  replace?: boolean | undefined,
+) => void
 
 export function createPersistStore<T extends object, M>(
   state: T,
   methods: (
     set: SetStoreState<T & MakeUpdater<T>>,
-    get: () => T & MakeUpdater<T>
+    get: () => T & MakeUpdater<T>,
   ) => M,
-  persistOptions: SecondParam<typeof persist<T & M & MakeUpdater<T>>>
+  persistOptions: SecondParam<typeof persist<T & M & MakeUpdater<T>>>,
 ) {
   return create(
     persist(
@@ -40,19 +40,19 @@ export function createPersistStore<T extends object, M>(
           return {
             ...methods(
               set as SetStoreState<T & MakeUpdater<T>>,
-              get as () => T & MakeUpdater<T>
+              get as () => T & MakeUpdater<T>,
             ),
             update(options) {
               set((state) => ({
                 ...state,
                 ...options,
                 lastUpdateTime: Date.now(),
-              }));
+              }))
             },
-          } as M & MakeUpdater<T>;
-        }
+          } as M & MakeUpdater<T>
+        },
       ),
-      persistOptions as any
-    )
-  );
+      persistOptions as any,
+    ),
+  )
 }

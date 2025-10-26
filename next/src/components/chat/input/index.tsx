@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   ImageIcon,
@@ -6,25 +6,25 @@ import {
   SendIcon,
   PaperclipIcon,
   SparklesIcon,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { TooltipButton } from "@/components/ui/tooltip-button";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
-import { useMemo, useState } from "react";
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { TooltipButton } from '@/components/ui/tooltip-button'
+import { Textarea } from '@/components/ui/textarea'
+import { toast } from 'sonner'
+import { useMemo, useState } from 'react'
 
 export function ChatInput() {
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState<string>('')
 
   const handleSend = () => {
-    toast.info("功能暂未开放");
-  };
+    toast.info('功能暂未开放')
+  }
 
   const todo = () => {
-    toast.info("功能暂未开放");
-  };
+    toast.info('功能暂未开放')
+  }
 
-  const isInputDisabled = useMemo(() => !message.trim().length, [message]);
+  const isInputDisabled = useMemo(() => !message.trim().length, [message])
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -79,5 +79,5 @@ export function ChatInput() {
         </div>
       </div>
     </div>
-  );
+  )
 }

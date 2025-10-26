@@ -1,9 +1,9 @@
-import { Button, ButtonProps } from "./button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
+import { Button, ButtonProps } from './button'
+import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip'
 
 interface TooltipButtonProps extends ButtonProps {
-  children: React.ReactNode;
-  content: string;
+  children: React.ReactNode
+  content: string
 }
 
 export function TooltipButton({
@@ -20,5 +20,5 @@ export function TooltipButton({
       </TooltipTrigger>
       <TooltipContent>{content}</TooltipContent>
     </Tooltip>
-  );
+  )
 }

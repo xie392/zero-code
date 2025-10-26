@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import {
   Code2,
   Palette,
@@ -17,111 +17,111 @@ import {
   Users,
   Target,
   Lightbulb,
-} from "lucide-react";
-import Link from "next/link";
-import { GithubIcon } from "@/components/ui/icon+";
+} from 'lucide-react'
+import Link from 'next/link'
+import { GithubIcon } from '@/components/ui/icon+'
 
 const techStack = {
   frontend: [
     {
-      name: "React 19",
-      icon: "⚛️",
-      color: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+      name: 'React 19',
+      icon: '⚛️',
+      color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
     },
     {
-      name: "Next.js",
-      icon: "▲",
-      color: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
+      name: 'Next.js',
+      icon: '▲',
+      color: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
     },
     {
-      name: "TypeScript",
-      icon: "📘",
-      color: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+      name: 'TypeScript',
+      icon: '📘',
+      color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
     },
     {
-      name: "Tailwind CSS",
-      icon: "🎨",
-      color: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300",
+      name: 'Tailwind CSS',
+      icon: '🎨',
+      color: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300',
     },
     {
-      name: "Radix UI",
-      icon: "🔧",
+      name: 'Radix UI',
+      icon: '🔧',
       color:
-        "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+        'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
     },
   ],
   backend: [
     {
-      name: "Java 22",
-      icon: "☕",
+      name: 'Java 22',
+      icon: '☕',
       color:
-        "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
+        'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
     },
     {
-      name: "Spring Boot",
-      icon: "🍃",
+      name: 'Spring Boot',
+      icon: '🍃',
       color:
-        "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
     },
     {
-      name: "MySQL",
-      icon: "🗄️",
-      color: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+      name: 'MySQL',
+      icon: '🗄️',
+      color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
     },
     {
-      name: "Swagger",
-      icon: "📝",
+      name: 'Swagger',
+      icon: '📝',
       color:
-        "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
     },
   ],
-};
+}
 
 const features = [
   {
     icon: Code2,
-    title: "AI代码生成",
-    description: "智能生成高质量代码，提升开发效率",
-    status: "✅ 已完成",
+    title: 'AI代码生成',
+    description: '智能生成高质量代码，提升开发效率',
+    status: '✅ 已完成',
   },
   {
     icon: Palette,
-    title: "可视化编辑",
-    description: "拖拽式界面设计，所见即所得",
-    status: "✅ 已完成",
+    title: '可视化编辑',
+    description: '拖拽式界面设计，所见即所得',
+    status: '✅ 已完成',
   },
   {
     icon: Shield,
-    title: "用户管理",
-    description: "完整的权限系统和用户认证",
-    status: "✅ 已完成",
+    title: '用户管理',
+    description: '完整的权限系统和用户认证',
+    status: '✅ 已完成',
   },
   {
     icon: Smartphone,
-    title: "响应式设计",
-    description: "完美适配所有设备尺寸",
-    status: "✅ 已完成",
+    title: '响应式设计',
+    description: '完美适配所有设备尺寸',
+    status: '✅ 已完成',
   },
   {
     icon: Moon,
-    title: "主题切换",
-    description: "支持明暗主题无缝切换",
-    status: "✅ 已完成",
+    title: '主题切换',
+    description: '支持明暗主题无缝切换',
+    status: '✅ 已完成',
   },
   {
     icon: BarChart3,
-    title: "数据分析",
-    description: "实时数据可视化和分析",
-    status: "🚧 开发中",
+    title: '数据分析',
+    description: '实时数据可视化和分析',
+    status: '🚧 开发中',
   },
-];
+]
 
 const stats = [
-  { label: "首屏加载", value: "< 2s", description: "极速响应" },
-  { label: "打包大小", value: "< 500KB", description: "轻量级应用" },
-  { label: "API响应", value: "< 100ms", description: "毫秒级响应" },
-  { label: "移动适配", value: "100%", description: "完美适配" },
-];
+  { label: '首屏加载', value: '< 2s', description: '极速响应' },
+  { label: '打包大小', value: '< 500KB', description: '轻量级应用' },
+  { label: 'API响应', value: '< 100ms', description: '毫秒级响应' },
+  { label: '移动适配', value: '100%', description: '完美适配' },
+]
 
 export default function AboutPage() {
   return (
@@ -129,9 +129,9 @@ export default function AboutPage() {
       {/* 背景渐变 */}
       <div
         className={cn(
-          "fixed top-0 -z-10 h-screen w-full",
-          "bg-gradient-to-b from-white via-blue-50 to-indigo-100",
-          "dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900"
+          'fixed top-0 -z-10 h-screen w-full',
+          'bg-gradient-to-b from-white via-blue-50 to-indigo-100',
+          'dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900',
         )}
       />
 
@@ -262,7 +262,7 @@ export default function AboutPage() {
                   <p className="text-muted-foreground">{feature.description}</p>
                   <Badge
                     variant={
-                      feature.status.includes("✅") ? "default" : "secondary"
+                      feature.status.includes('✅') ? 'default' : 'secondary'
                     }
                   >
                     {feature.status}
@@ -360,5 +360,5 @@ export default function AboutPage() {
         </section>
       </div>
     </div>
-  );
+  )
 }

@@ -19,7 +19,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
 
   return {
     // session,
-    db
+    db,
   }
 }
 
