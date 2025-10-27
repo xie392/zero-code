@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
-import { IconUser, IconUserCheck } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,32 +22,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // import { updateUser } from '@/api/yonghuguanli'
 
-enum UserRole {
-  Admin = "admin",
-  User = "user",
-}
-
 const formSchema = z.object({
-  // id: z.string(),
-  userName: z
+  name: z
     .string()
     .min(1, "用户名不能为空")
     .max(50, "用户名不能超过50个字符"),
-  userAvatar: z.string().optional(),
-  userProfile: z.string().max(200, "简介不能超过200个字符").optional(),
-  userRole: z.enum(UserRole),
+  email: z.string().email("请输入有效的邮箱地址"),
+  image: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -56,14 +40,9 @@ type FormValues = z.infer<typeof formSchema>;
 interface UserEditDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  user: API.UserVO | null;
+  user: API.User | null;
   onSuccess?: () => void;
 }
-
-const roleOptions = [
-  { value: "admin", label: "管理员", icon: IconUserCheck },
-  { value: "user", label: "普通用户", icon: IconUser },
-];
 
 export function UserEditDialog({
   open,
@@ -76,11 +55,9 @@ export function UserEditDialog({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      // id: '',
-      userName: "",
-      userAvatar: "",
-      userProfile: "",
-      userRole: UserRole.User,
+      name: "",
+      email: "",
+      image: "",
     },
   });
 
@@ -88,11 +65,9 @@ export function UserEditDialog({
   React.useEffect(() => {
     if (user && open) {
       form.reset({
-        // id: user.id?.toString() || '',
-        userName: user.userName || "",
-        userAvatar: user.userAvatar || "",
-        userProfile: user.userProfile || "",
-        userRole: (user.userRole as UserRole) || UserRole.User,
+        name: user.name || "",
+        email: user.email || "",
+        image: user.image || "",
       });
     }
   }, [user, open, form]);
@@ -139,18 +114,18 @@ export function UserEditDialog({
             <div className="flex justify-center">
               <Avatar className="h-16 w-16">
                 <AvatarImage
-                  src={form.watch("userAvatar")}
-                  alt={form.watch("userName")}
+                  src={form.watch("image") || undefined}
+                  alt={form.watch("name")}
                 />
                 <AvatarFallback>
-                  {form.watch("userName")?.charAt(0)?.toUpperCase() || "U"}
+                  {form.watch("name")?.charAt(0)?.toUpperCase() || "U"}
                 </AvatarFallback>
               </Avatar>
             </div>
 
             <FormField
               control={form.control}
-              name="userName"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>用户名</FormLabel>
@@ -164,66 +139,27 @@ export function UserEditDialog({
 
             <FormField
               control={form.control}
-              name="userAvatar"
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>邮箱</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="请输入邮箱" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="image"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>头像URL</FormLabel>
                   <FormControl>
                     <Input placeholder="请输入头像URL" {...field} />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="userProfile"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>个人简介</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="请输入个人简介"
-                      className="resize-none"
-                      rows={3}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="userRole"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>用户角色</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="选择用户角色" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {roleOptions.map((role) => {
-                        const Icon = role.icon;
-                        return (
-                          <SelectItem key={role.value} value={role.value}>
-                            <div className="flex items-center">
-                              <Icon className="mr-2 h-4 w-4" />
-                              {role.label}
-                            </div>
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

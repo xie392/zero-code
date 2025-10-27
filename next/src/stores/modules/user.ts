@@ -37,7 +37,7 @@ export const useUserStore = createPersistStore(
      */
     logout: async () => {
       //   await userLogout();
-      const { update } = get()
+      const { update, reset } = get()
       update(initUserState)
       // reset();
       location.replace('/login')

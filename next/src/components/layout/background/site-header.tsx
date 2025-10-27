@@ -23,8 +23,8 @@ export function SiteHeader({ title }: SiteHeaderProps) {
                     <DropdownMenu>
                         <DropdownMenuTrigger>
                             <Avatar>
-                                <AvatarImage src={user?.userAvatar} />
-                                <AvatarFallback>{user?.userName?.[0]}</AvatarFallback>
+                                <AvatarImage src={user?.image || undefined} />
+                                <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
                             </Avatar>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>

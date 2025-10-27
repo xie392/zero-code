@@ -1,11 +1,14 @@
 import { betterAuth } from 'better-auth'
-import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { nextCookies } from 'better-auth/next-js'
-import { db } from '@/db'
+import { prisma } from '@/lib/prisma'
 
+/**
+ * better-auth 配置
+ */
 export const auth = betterAuth({
-  database: drizzleAdapter(db, {
-    provider: 'pg',
+  database: prismaAdapter(prisma, {
+    provider: 'postgresql',
   }),
   emailAndPassword: {
     enabled: true,

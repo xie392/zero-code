@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// 用户表
+model user {
+  id             String    @id /// 用户唯一标识
+  name           String    /// 用户名称
+  email          String    @unique(map: "user_email_unique") /// 用户邮箱地址
+  emailVerified  Boolean   @default(false) @map("email_verified") /// 邮箱是否已验证
+  image          String?   /// 用户头像URL
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp(6) /// 创建时间
+  updatedAt      DateTime  @default(now()) @map("updated_at") @db.Timestamp(6) /// 更新时间
+  deletedAt      DateTime? @map("deleted_at") @db.Timestamp(6) /// 删除时间
+  
+  // Relations
+  accounts       account[]
+  sessions       session[]
+}
+
+/// 会话表
+model session {
+  id         String    @id /// 会话唯一标识
+  expiresAt  DateTime  @map("expires_at") @db.Timestamp(6) /// 会话过期时间
+  token      String    @unique(map: "session_token_unique") /// 会话令牌
+  ipAddress  String?   @map("ip_address") /// 客户端IP地址
+  userAgent  String?   @map("user_agent") /// 客户端用户代理
+  userId     String    @map("user_id") /// 关联的用户ID
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6) /// 创建时间
+  updatedAt  DateTime  @default(now()) @map("updated_at") @db.Timestamp(6) /// 更新时间
+  deletedAt  DateTime? @map("deleted_at") @db.Timestamp(6) /// 删除时间
+  
+  // Relations
+  user       user      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "session_user_id_user_id_fk")
+}
+
+/// 账户表
+model account {
+  id                      String    @id /// 账户唯一标识
+  accountId               String    @map("account_id") /// 第三方账户ID
+  providerId              String    @map("provider_id") /// 认证提供商ID
+  userId                  String    @map("user_id") /// 关联的用户ID
+  accessToken             String?   @map("access_token") /// OAuth访问令牌
+  refreshToken            String?   @map("refresh_token") /// OAuth刷新令牌
+  idToken                 String?   @map("id_token") /// OAuth ID令牌
+  accessTokenExpiresAt    DateTime? @map("access_token_expires_at") @db.Timestamp(6) /// 访问令牌过期时间
+  refreshTokenExpiresAt   DateTime? @map("refresh_token_expires_at") @db.Timestamp(6) /// 刷新令牌过期时间
+  scope                   String?   /// OAuth权限范围
+  password                String?   /// 密码哈希(仅用于密码认证)
+  createdAt               DateTime  @default(now()) @map("created_at") @db.Timestamp(6) /// 创建时间
+  updatedAt               DateTime  @default(now()) @map("updated_at") @db.Timestamp(6) /// 更新时间
+  deletedAt               DateTime? @map("deleted_at") @db.Timestamp(6) /// 删除时间
+  
+  // Relations
+  user                    user      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "account_user_id_user_id_fk")
+}
+
+/// 验证表 
+model verification {
+  id         String    @id /// 验证记录唯一标识
+  identifier String    /// 验证标识符(邮箱/手机号)
+  value      String    /// 验证码/令牌
+  expiresAt  DateTime  @map("expires_at") @db.Timestamp(6) /// 过期时间
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6) /// 创建时间
+  updatedAt  DateTime  @default(now()) @map("updated_at") @db.Timestamp(6) /// 更新时间
+  deletedAt  DateTime? @map("deleted_at") @db.Timestamp(6) /// 删除时间
+}

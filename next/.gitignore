@@ -38,3 +38,5 @@ next-env.d.ts
 translate.local.json
 # Million Lint
 .million
+
+/src/generated/prisma
