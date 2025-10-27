@@ -12,19 +12,84 @@ import { TooltipButton } from '@/components/ui/tooltip-button'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 import { useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export function ChatInput() {
+  const router = useRouter()
   const [message, setMessage] = useState<string>('')
+  const [isGenerating, setIsGenerating] = useState(false)
 
-  const handleSend = () => {
-    toast.info('功能暂未开放')
+  const handleSend = async () => {
+    if (!message.trim()) return
+
+    setIsGenerating(true)
+
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: message }),
+      })
+
+      console.log('Response status:', response.status, response.statusText)
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Response error:', errorText)
+        throw new Error(`生成失败: ${response.status} ${errorText}`)
+      }
+
+      // 读取流式响应
+      const reader = response.body?.getReader()
+      const decoder = new TextDecoder()
+
+      if (!reader) {
+        throw new Error('无法读取响应')
+      }
+
+      let projectId = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const chunk = decoder.decode(value)
+        const lines = chunk.split('\n')
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6))
+              
+              if (data.type === 'project_id') {
+                projectId = data.projectId
+                // 立即跳转到工作区
+                router.push(`/workspace/${projectId}`)
+                return
+              }
+            } catch (e) {
+              // 忽略解析错误
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('生成失败:', error)
+      toast.error('生成失败，请重试')
+      setIsGenerating(false)
+    }
   }
 
   const todo = () => {
     toast.info('功能暂未开放')
   }
 
-  const isInputDisabled = useMemo(() => !message.trim().length, [message])
+  const isInputDisabled = useMemo(
+    () => !message.trim().length || isGenerating,
+    [message, isGenerating]
+  )
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -73,7 +138,11 @@ export function ChatInput() {
               disabled={isInputDisabled}
               onClick={handleSend}
             >
-              <SendIcon size={20} />
+              {isGenerating ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+              ) : (
+                <SendIcon size={20} />
+              )}
             </Button>
           </div>
         </div>

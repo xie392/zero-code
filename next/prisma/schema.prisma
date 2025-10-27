@@ -16,12 +16,13 @@ model user {
   emailVerified  Boolean   @default(false) @map("email_verified") /// 邮箱是否已验证
   image          String?   /// 用户头像URL
   createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp(6) /// 创建时间
-  updatedAt      DateTime  @default(now()) @map("updated_at") @db.Timestamp(6) /// 更新时间
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6) /// 更新时间
   deletedAt      DateTime? @map("deleted_at") @db.Timestamp(6) /// 删除时间
   
   // Relations
   accounts       account[]
   sessions       session[]
+  projects       project[]
 }
 
 /// 会话表
@@ -33,7 +34,7 @@ model session {
   userAgent  String?   @map("user_agent") /// 客户端用户代理
   userId     String    @map("user_id") /// 关联的用户ID
   createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6) /// 创建时间
-  updatedAt  DateTime  @default(now()) @map("updated_at") @db.Timestamp(6) /// 更新时间
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6) /// 更新时间
   deletedAt  DateTime? @map("deleted_at") @db.Timestamp(6) /// 删除时间
   
   // Relations
@@ -54,7 +55,7 @@ model account {
   scope                   String?   /// OAuth权限范围
   password                String?   /// 密码哈希(仅用于密码认证)
   createdAt               DateTime  @default(now()) @map("created_at") @db.Timestamp(6) /// 创建时间
-  updatedAt               DateTime  @default(now()) @map("updated_at") @db.Timestamp(6) /// 更新时间
+  updatedAt               DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6) /// 更新时间
   deletedAt               DateTime? @map("deleted_at") @db.Timestamp(6) /// 删除时间
   
   // Relations
@@ -68,6 +69,65 @@ model verification {
   value      String    /// 验证码/令牌
   expiresAt  DateTime  @map("expires_at") @db.Timestamp(6) /// 过期时间
   createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6) /// 创建时间
-  updatedAt  DateTime  @default(now()) @map("updated_at") @db.Timestamp(6) /// 更新时间
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6) /// 更新时间
   deletedAt  DateTime? @map("deleted_at") @db.Timestamp(6) /// 删除时间
+}
+
+// ==================== 项目管理（MVP 版本） ====================
+
+/// 项目表
+model project {
+  id          String   @id @default(cuid())
+  name        String   /// 项目名称（自动生成）
+  userId      String   @map("user_id")
+  
+  /// 用户输入的原始提示词
+  prompt      String   @db.Text
+  
+  /// 生成的完整 HTML 代码
+  htmlContent String?  @map("html_content") @db.Text
+  
+  /// 项目状态
+  status      ProjectStatus @default(GENERATING)
+  
+  /// 缩略图
+  thumbnail   String?
+  
+  /// 元数据
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamp(6)
+  
+  /// Relations
+  user        user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages    chat_message[]
+  
+  @@index([userId])
+  @@index([status])
+  @@map("project")
+}
+
+/// 项目状态
+enum ProjectStatus {
+  GENERATING /// 生成中
+  COMPLETED  /// 已完成
+  ERROR      /// 出错
+}
+
+/// 对话消息表
+model chat_message {
+  id          String   @id @default(cuid())
+  projectId   String   @map("project_id")
+  role        String   /// user, assistant, system
+  content     String   @db.Text
+  
+  /// 消息元数据（用于存储特殊样式、代码块等）
+  metadata    Json?
+  
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  
+  project     project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  @@index([projectId])
+  @@map("chat_message")
 }

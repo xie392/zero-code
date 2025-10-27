@@ -52,27 +52,27 @@ const techStack = {
   ],
   backend: [
     {
-      name: 'Java 22',
-      icon: '☕',
+      name: 'Next.js API',
+      icon: '▲',
       color:
-        'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
+        'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
     },
     {
-      name: 'Spring Boot',
-      icon: '🍃',
+      name: 'Prisma ORM',
+      icon: '🔺',
       color:
-        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+        'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300',
     },
     {
-      name: 'MySQL',
-      icon: '🗄️',
+      name: 'PostgreSQL',
+      icon: '🐘',
       color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
     },
     {
-      name: 'Swagger',
-      icon: '📝',
+      name: 'Better Auth',
+      icon: '🔐',
       color:
-        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+        'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
     },
   ],
 }
@@ -80,39 +80,39 @@ const techStack = {
 const features = [
   {
     icon: Code2,
-    title: 'AI代码生成',
-    description: '智能生成高质量代码，提升开发效率',
+    title: 'AI 网页生成',
+    description: '使用 LangGraph + DeepSeek 智能生成 HTML 应用',
     status: '✅ 已完成',
   },
   {
     icon: Palette,
-    title: '可视化编辑',
-    description: '拖拽式界面设计，所见即所得',
+    title: '实时预览',
+    description: '左侧预览右侧对话，实时查看生成效果',
     status: '✅ 已完成',
   },
   {
     icon: Shield,
-    title: '用户管理',
-    description: '完整的权限系统和用户认证',
+    title: '用户认证',
+    description: '基于 Better Auth 的完整认证系统',
     status: '✅ 已完成',
   },
   {
     icon: Smartphone,
-    title: '响应式设计',
-    description: '完美适配所有设备尺寸',
+    title: '流式生成',
+    description: '实时流式展示 AI 生成过程',
     status: '✅ 已完成',
   },
   {
     icon: Moon,
-    title: '主题切换',
-    description: '支持明暗主题无缝切换',
+    title: '对话优化',
+    description: '多轮对话持续优化生成的应用',
     status: '✅ 已完成',
   },
   {
     icon: BarChart3,
-    title: '数据分析',
-    description: '实时数据可视化和分析',
-    status: '🚧 开发中',
+    title: '项目管理',
+    description: '完整的项目历史和对话记录',
+    status: '✅ 已完成',
   },
 ]
 
@@ -158,12 +158,12 @@ export default function AboutPage() {
               <Rocket className="size-4" />
               开始使用
             </Button>
-            <Button variant="outline" size="lg" className="gap-2" asChild>
-              <Link href="https://github.com" target="_blank">
+            <Link href="https://github.com" target="_blank">
+              <Button variant="outline" size="lg" className="gap-2">
                 <GithubIcon className="size-4" />
                 查看源码
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </div>
         </section>
 
@@ -225,10 +225,10 @@ export default function AboutPage() {
                   ))}
                 </div>
                 <ul className="space-y-1 text-sm text-muted-foreground">
-                  <li>☕ Java 22 + Spring Boot 3.5</li>
-                  <li>🗄️ MySQL 数据库</li>
-                  <li>📝 Swagger API文档</li>
-                  <li>🚀 RESTful API设计</li>
+                  <li>▲ Next.js 15 API Routes</li>
+                  <li>🐘 PostgreSQL 数据库</li>
+                  <li>🔺 Prisma ORM</li>
+                  <li>🔐 Better Auth 认证</li>
                 </ul>
               </CardContent>
             </Card>
@@ -320,12 +320,12 @@ export default function AboutPage() {
                   致力于让每个人都能轻松创建强大的AI应用。
                 </p>
                 <div className="flex justify-center gap-4">
-                  <Button variant="outline" className="gap-2" asChild>
-                    <Link href="https://github.com" target="_blank">
+                  <Link href="https://github.com" target="_blank">
+                    <Button variant="outline" className="gap-2">
                       <GithubIcon className="size-4" />
                       GitHub
-                    </Link>
-                  </Button>
+                    </Button>
+                  </Link>
                   <Button variant="outline" className="gap-2">
                     <ExternalLink className="size-4" />
                     联系我们
@@ -346,12 +346,12 @@ export default function AboutPage() {
           </div>
 
           <div className="flex flex-wrap justify-center gap-4">
-            <Button size="lg" className="gap-2" asChild>
-              <Link href="/">
+            <Link href="/">
+              <Button size="lg" className="gap-2">
                 <Lightbulb className="size-4" />
                 立即开始
-              </Link>
-            </Button>
+              </Button>
+            </Link>
             <Button variant="outline" size="lg" className="gap-2">
               <Target className="size-4" />
               了解更多

@@ -1,23 +1,57 @@
+'use client'
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { EyeIcon, ThumbsUpIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import type { Project } from '@/types/project'
 
-export function AppItem() {
+interface AppItemProps {
+  project: Project
+}
+
+export function AppItem({ project }: AppItemProps) {
+  const router = useRouter()
+  const handleOpen = () => {
+    router.push(`/workspace/${project.id}`)
+  }
+
   return (
     <div className="group w-full">
       {/* 图片容器 */}
-      <div className="relative h-64 w-full cursor-pointer overflow-hidden rounded-xl bg-slate-200">
-        <img
-          src="https://picsum.photos/600/300"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          alt=""
-        />
+      <div
+        className="relative h-64 w-full cursor-pointer overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 to-indigo-100"
+        onClick={handleOpen}
+      >
+        {project.thumbnail ? (
+          <img
+            src={project.thumbnail}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            alt={project.name}
+          />
+        ) : (
+          <div className="h-full w-full flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-6xl mb-2">🎨</div>
+              <p className="text-gray-500 text-sm">{project.name}</p>
+            </div>
+          </div>
+        )}
         {/* 悬浮按钮层 */}
         <div className="absolute inset-0 flex flex-col justify-end bg-black/30 p-4 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
           <div className="flex gap-4 translate-y-4 transition-transform duration-500 group-hover:translate-y-0">
-            <Button className="flex-1">访问</Button>
-            <Button className="flex-1" variant="outline">
-              详情
+            <Button className="flex-1" onClick={handleOpen}>
+              打开
+            </Button>
+            <Button
+              className="flex-1"
+              variant="outline"
+              onClick={(e) => {
+                e.stopPropagation()
+                router.push(`/workspace/${project.id}`)
+              }}
+            >
+              编辑
             </Button>
           </div>
         </div>
@@ -27,38 +61,34 @@ export function AppItem() {
       <div className="space-y-2 py-4">
         <h3
           className="truncate font-semibold text-slate-900 dark:text-white"
-          title="应用名称"
+          title={project.name}
         >
-          应用名称
+          {project.name}
         </h3>
+        <p className="text-sm text-gray-500 line-clamp-2" title={project.prompt}>
+          {project.prompt}
+        </p>
 
-        {/* 作者与统计行 */}
-        <div className="flex items-center justify-between">
-          {/* 作者信息 */}
-          <div className="flex min-w-0 items-center gap-2">
-            <Avatar className="size-6 shrink-0">
-              <AvatarImage src="https://picsum.photos/100" alt="avatar" />
-              <AvatarFallback className="text-xs">中</AvatarFallback>
-            </Avatar>
-            <span
-              className="min-w-0 flex-1 truncate text-sm text-slate-600 dark:text-slate-300"
-              title="中分银发帅哥"
-            >
-              中分银发帅哥
-            </span>
-          </div>
-
-          {/* 统计信息 */}
-          <div className="flex items-center gap-6 text-slate-500 dark:text-slate-400">
-            <div className="flex items-center gap-1">
-              <EyeIcon className="size-4" />
-              <span className="text-sm">39.9K</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <ThumbsUpIcon className="size-4" />
-              <span className="text-sm">1.1K</span>
-            </div>
-          </div>
+        {/* 状态与时间 */}
+        <div className="flex items-center justify-between text-sm">
+          <span
+            className={`px-2 py-0.5 rounded-full text-xs ${
+              project.status === 'COMPLETED'
+                ? 'bg-green-100 text-green-700'
+                : project.status === 'GENERATING'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'bg-red-100 text-red-700'
+            }`}
+          >
+            {project.status === 'COMPLETED'
+              ? '已完成'
+              : project.status === 'GENERATING'
+                ? '生成中'
+                : '错误'}
+          </span>
+          <span className="text-gray-400 text-xs">
+            {new Date(project.createdAt).toLocaleDateString('zh-CN')}
+          </span>
         </div>
       </div>
     </div>
