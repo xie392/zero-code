@@ -1,20 +1,20 @@
-'use client'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { httpBatchLink } from '@trpc/client'
-import { useState } from 'react'
-import { trpc } from '@/lib/trpc-client'
+"use client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { httpBatchLink } from "@trpc/client";
+import { useState } from "react";
+import { trpc } from "@/lib/trpc-client";
 
 /**
  * Query Provider 组件
- * 
+ *
  * 集成了 tRPC 和 React Query 的统一 Provider
  * 这个组件应该在应用的根组件中使用
  */
 export default function QueryProvider({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   // 创建 React Query 客户端
   const [queryClient] = useState(
@@ -28,8 +28,8 @@ export default function QueryProvider({
             retry: 1,
           },
         },
-      }),
-  )
+      })
+  );
 
   // 创建 tRPC 客户端
   const [trpcClient] = useState(() =>
@@ -39,18 +39,18 @@ export default function QueryProvider({
         // 这样可以减少网络请求次数，提高性能
         httpBatchLink({
           // tRPC API 的 URL
-          url: '/api/trpc',
+          url: "/api/trpc",
           // 设置请求头（可选）
           headers() {
             return {
               // 可以在这里添加自定义请求头
               // better-auth 会自动通过 cookie 发送认证信息
-            }
+            };
           },
         }),
       ],
-    }),
-  )
+    })
+  );
 
   return (
     // tRPC Provider 包装 QueryClientProvider
@@ -58,8 +58,8 @@ export default function QueryProvider({
       <QueryClientProvider client={queryClient}>
         {children}
         {/* 开发环境下显示 React Query DevTools */}
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} buttonPosition="relative" /> */}
       </QueryClientProvider>
     </trpc.Provider>
-  )
+  );
 }
