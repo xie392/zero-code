@@ -1,6 +1,7 @@
 import { router } from './trpc'
 import { userRouter } from './routers/user'
 import { postRouter } from './routers/post'
+import { projectRouter } from './routers/project'
 
 /**
  * 主路由器
@@ -13,6 +14,8 @@ export const appRouter = router({
   user: userRouter,
   // 文章相关的接口
   post: postRouter,
+  // 项目相关的接口
+  project: projectRouter,
 })
 
 /**

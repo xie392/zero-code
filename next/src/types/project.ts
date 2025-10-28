@@ -12,8 +12,8 @@ export interface Project {
   htmlContent: string | null
   status: ProjectStatus
   thumbnail: string | null
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date | string
+  updatedAt: Date | string
 }
 
 export interface ChatMessage {
@@ -22,7 +22,7 @@ export interface ChatMessage {
   role: 'user' | 'assistant' | 'system'
   content: string
   metadata?: Record<string, any>
-  createdAt: Date
+  createdAt: Date | string
 }
 
 export interface CreateProjectRequest {
