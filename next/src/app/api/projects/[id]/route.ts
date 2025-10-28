@@ -4,8 +4,8 @@
  */
 
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { auth } from '@/lib/auth'
+import { prisma } from '@/server/prisma'
+import { auth } from '@/server/auth/auth'
 
 export async function GET(
   request: NextRequest,

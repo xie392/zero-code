@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { trpc } from '@/lib/trpc-client'
-import { useSession } from '@/lib/auth-client'
+import { trpc } from '@/server/api/trpc-client'
+import { useSession } from '@/server/auth/auth-client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'

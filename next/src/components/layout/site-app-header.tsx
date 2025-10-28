@@ -15,12 +15,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { Home, Info, AppWindowMac } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useSession, signOut } from "@/lib/auth-client";
+import { useSession, signOut } from "@/server/auth/auth-client";
 
-const navigationItems = [
-  { name: "首页", path: "/", icon: Home },
-  { name: "应用", path: "/apps", icon: AppWindowMac },
-  { name: "关于", path: "/about", icon: Info },
+interface NavigationItem {
+  name: string;
+  path: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+const navigationItems: NavigationItem[] = [
+  // { name: "首页", path: "/", icon: Home },
+  // { name: "应用", path: "/apps", icon: AppWindowMac },
+  // { name: "关于", path: "/about", icon: Info },
 ];
 
 export function SiteAppHeader() {

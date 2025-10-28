@@ -1,7 +1,7 @@
 import { initTRPC, TRPCError } from '@trpc/server'
 import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch'
-import { prisma } from '@/lib/prisma'
-import { auth } from '@/lib/auth'
+import { prisma } from '@/server/prisma'
+import { auth } from '@/server/auth/auth'
 import type { Session, User } from 'better-auth/types'
 
 /**
@@ -20,6 +20,9 @@ export const createContext = async (opts: FetchCreateContextFnOptions) => {
   })
 
   return {
+    // 原始请求对象（用于 better-auth API 调用）
+    req: opts.req,
+    res: opts.resHeaders,
     // Prisma 数据库客户端
     prisma,
     // 用户会话信息（包含 session 和 user）

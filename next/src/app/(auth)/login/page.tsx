@@ -1,6 +1,6 @@
 "use client";
 import { AuthForm } from "@/components/auth-form";
-import { signIn } from "@/lib/auth-client";
+import { trpc } from "@/server/api/trpc-client";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -18,20 +18,21 @@ export default function LoginPage() {
   const params = useSearchParams();
   const redirectPath = useMemo(() => params.get("redirect") ?? "/", [params]);
 
+  // 使用 tRPC 的 mutation
+  const loginMutation = trpc.auth.login.useMutation({
+    onSuccess: () => {
+      toast.success("登录成功");
+      router.push(redirectPath);
+      // 刷新页面以更新会话状态
+      router.refresh();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await signIn.email(
-      {
-        ...values,
-      },
-      {
-        onSuccess: () => {
-          router.push(redirectPath);
-        },
-        onError: (ctx) => {
-          toast.error(ctx.error.message);
-        },
-      }
-    );
+    await loginMutation.mutateAsync(values);
   };
 
   return (

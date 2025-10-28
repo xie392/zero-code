@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/server/prisma";
 import { protectedProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
 
@@ -14,7 +14,7 @@ export const projectRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const project = await prisma.project.findUnique({
+      const project = await ctx.prisma.project.findUnique({
         where: {
           id: input.id,
           deletedAt: null,
@@ -45,7 +45,14 @@ export const projectRouter = router({
       
       return {
         ...project,
-        messages: project.messages.map((msg) => ({
+        messages: project.messages.map((msg: {
+          id: string;
+          projectId: string;
+          role: string;
+          content: string;
+          metadata: any;
+          createdAt: Date;
+        }) => ({
           id: msg.id,
           projectId: msg.projectId,
           role: msg.role as "user" | "assistant" | "system",

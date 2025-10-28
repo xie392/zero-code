@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { httpBatchLink } from "@trpc/client";
 import { useState } from "react";
-import { trpc } from "@/lib/trpc-client";
+import { trpc } from "@/server/api/trpc-client";
 
 /**
  * Query Provider 组件
@@ -58,7 +58,7 @@ export default function QueryProvider({
       <QueryClientProvider client={queryClient}>
         {children}
         {/* 开发环境下显示 React Query DevTools */}
-        {/* <ReactQueryDevtools initialIsOpen={false} buttonPosition="relative" /> */}
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </trpc.Provider>
   );

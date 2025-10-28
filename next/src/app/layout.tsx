@@ -6,7 +6,6 @@ import { Toaster } from '@/components/ui/sonner'
 
 import QueryProvider from '@/components/providers/query-provider'
 import QueryHydrationProvider from '@/components/providers/query-hydration-provider'
-import AuthProvider from '@/components/providers/auth-provider'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -36,7 +35,7 @@ export default function RootLayout({
       >
         <QueryProvider>
           <QueryHydrationProvider>
-            <AuthProvider>{children}</AuthProvider>
+            {children}
           </QueryHydrationProvider>
         </QueryProvider>
         <Toaster position="top-center" visibleToasts={3} closeButton />

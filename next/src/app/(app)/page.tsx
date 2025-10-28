@@ -1,8 +1,4 @@
 'use client'
-// import Image from "next/image";
-// import { loginUserInfoApi } from "@/api/user";
-// import { useQuery } from "@tanstack/react-query";
-// import { ChatInput } from "@/components/chat/input";
 import { AppHeroInput } from '@/components/hero/app-hero-input'
 import { AppList } from '@/components/app-list/app-list'
 import { cn } from '@/lib/utils'

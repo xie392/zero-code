@@ -1,6 +1,6 @@
 'use client'
 
-import { trpc } from '@/lib/trpc-client'
+import { trpc } from '@/server/api/trpc-client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Skeleton } from '@/components/ui/skeleton'

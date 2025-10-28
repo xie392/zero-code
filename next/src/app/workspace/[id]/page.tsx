@@ -6,7 +6,7 @@ import { PreviewPanel } from "@/components/workspace/preview-panel";
 import { ChatPanel } from "@/components/workspace/chat-panel";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { trpc } from "@/lib/trpc-client";
+import { trpc } from "@/server/api/trpc-client";
 
 interface PageProps {
   params: Promise<{ id: string }>;

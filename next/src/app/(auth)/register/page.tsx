@@ -1,6 +1,6 @@
 "use client";
 import { AuthForm } from "@/components/auth-form";
-import { signUp } from "@/lib/auth-client";
+import { trpc } from "@/server/api/trpc-client";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -40,21 +40,20 @@ export default function RegisterPage() {
   const params = useSearchParams();
   const redirectPath = useMemo(() => params.get("redirect") ?? "/", [params]);
 
+  // 使用 tRPC 的 mutation
+  const registerMutation = trpc.auth.register.useMutation({
+    onSuccess: () => {
+      toast.success("注册成功，请登录");
+      router.push("/login");
+      router.refresh();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await signUp.email(
-      {
-        ...values,
-        callbackURL: "/", // 用户验证邮箱后重定向的URL（可选）
-      },
-      {
-        onSuccess: () => {
-          router.push(redirectPath);
-        },
-        onError: (ctx) => {
-          toast.error(ctx.error.message || "注册失败");
-        },
-      }
-    );
+    await registerMutation.mutateAsync(values);
   };
 
   return (

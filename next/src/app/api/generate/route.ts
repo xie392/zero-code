@@ -4,9 +4,9 @@
  */
 
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { generateHtmlStream, modifyHtmlStream } from '@/lib/langgraph/agent'
-import { auth } from '@/lib/auth'
+import { prisma } from '@/server/prisma'
+import { generateHtmlStream, modifyHtmlStream } from '@/server/langgraph/agent'
+import { auth } from '@/server/auth/auth'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
