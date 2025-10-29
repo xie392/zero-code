@@ -1,39 +1,39 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Logo } from "@/components/common/logo";
+'use client'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Logo } from '@/components/common/logo'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form'
 
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { useMemo } from 'react'
 
 export interface FormFieldConfig {
-  name: string;
-  placeholder: string;
-  type?: "text" | "password" | "email";
+  name: string
+  placeholder: string
+  type?: 'text' | 'password' | 'email'
 }
 
 interface AuthFormProps<T extends z.ZodType<any, any, any>> {
-  formSchema: T;
-  defaultValues: z.infer<T>;
-  fields: FormFieldConfig[];
-  submitButtonText: string;
-  onSubmit: (values: z.infer<T>) => Promise<void>;
+  formSchema: T
+  defaultValues: z.infer<T>
+  fields: FormFieldConfig[]
+  submitButtonText: string
+  onSubmit: (values: z.infer<T>) => Promise<void>
   footerLink: {
-    text: string;
-    linkText: string;
-    href: string;
-  };
+    text: string
+    linkText: string
+    href: string
+  }
 }
 
 export function AuthForm<T extends z.ZodType<any, any, any>>({
@@ -47,10 +47,10 @@ export function AuthForm<T extends z.ZodType<any, any, any>>({
   const form = useForm<z.infer<T>>({
     resolver: zodResolver(formSchema) as any,
     defaultValues,
-  });
+  })
 
-  const params = useSearchParams();
-  const redirectPath = useMemo(() => params.get("redirect") ?? "/", [params]);
+  const params = useSearchParams()
+  const redirectPath = useMemo(() => params.get('redirect') ?? '/', [params])
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-10">
@@ -71,7 +71,7 @@ export function AuthForm<T extends z.ZodType<any, any, any>>({
                     <FormControl>
                       <Input
                         placeholder={field.placeholder}
-                        type={field.type || "text"}
+                        type={field.type || 'text'}
                         {...formField}
                       />
                     </FormControl>
@@ -80,8 +80,8 @@ export function AuthForm<T extends z.ZodType<any, any, any>>({
                 )}
               />
             ))}
-            <Button 
-              className="w-full" 
+            <Button
+              className="w-full"
               type="submit"
               loading={form.formState.isSubmitting}
             >
@@ -101,5 +101,5 @@ export function AuthForm<T extends z.ZodType<any, any, any>>({
         </p>
       </div>
     </div>
-  );
+  )
 }

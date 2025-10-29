@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 /**
  * 用户列表示例组件
- * 
+ *
  * 展示如何使用 tRPC 和 React Query 获取数据
  * 这是一个公开接口，无需登录即可访问
  */

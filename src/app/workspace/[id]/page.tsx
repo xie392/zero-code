@@ -1,29 +1,34 @@
-"use client";
+'use client'
 
-import { use, useState } from "react";
-import { useRouter } from "next/navigation";
-import { PreviewPanel } from "@/components/workspace/preview-panel";
-import { ChatPanel } from "@/components/workspace/chat-panel";
-import { Loader2, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { trpc } from "@/server/api/trpc-client";
+import { use, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { PreviewPanel } from '@/components/workspace/preview-panel'
+import { ChatPanel } from '@/components/workspace/chat-panel'
+import { Loader2, ArrowLeft } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { trpc } from '@/server/api/trpc-client'
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>
 }
 
 export default function WorkspacePage({ params }: PageProps) {
-  const resolvedParams = use(params);
-  const router = useRouter();
-  const [htmlContent, setHtmlContent] = useState<string | null>(null);
+  const resolvedParams = use(params)
+  const router = useRouter()
+  const [htmlContent, setHtmlContent] = useState<string | null>(null)
 
-  const { data: project, isLoading, isError, error } = trpc.project.getById.useQuery({
+  const {
+    data: project,
+    isLoading,
+    isError,
+    error,
+  } = trpc.project.getById.useQuery({
     id: resolvedParams.id,
-  });
+  })
 
   const handleNewHtml = (html: string) => {
-    setHtmlContent(html);
-  };
+    setHtmlContent(html)
+  }
 
   if (isLoading) {
     return (
@@ -33,18 +38,18 @@ export default function WorkspacePage({ params }: PageProps) {
           <p className="text-gray-600">加载中...</p>
         </div>
       </div>
-    );
+    )
   }
 
   if (isError || !project) {
     return (
       <div className="h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-500 mb-4">{error?.message || "项目不存在"}</p>
-          <Button onClick={() => router.push("/")}>返回首页</Button>
+          <p className="text-red-500 mb-4">{error?.message || '项目不存在'}</p>
+          <Button onClick={() => router.push('/')}>返回首页</Button>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -54,7 +59,7 @@ export default function WorkspacePage({ params }: PageProps) {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => router.push("/")}
+          onClick={() => router.push('/')}
           className="gap-2"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -64,9 +69,7 @@ export default function WorkspacePage({ params }: PageProps) {
           <h1 className="font-semibold text-gray-900 truncate">
             {project.name}
           </h1>
-          <p className="text-xs text-gray-500 truncate">
-            {project.prompt}
-          </p>
+          <p className="text-xs text-gray-500 truncate">{project.prompt}</p>
         </div>
         <div className="flex items-center gap-2">
           <Button>发布</Button>
@@ -89,5 +92,5 @@ export default function WorkspacePage({ params }: PageProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,43 +1,43 @@
-"use client";
+'use client'
 
-import { useState, KeyboardEvent } from "react";
-import { SendIcon, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { MinChatInput } from "./input/min-chat-input";
+import { useState, KeyboardEvent } from 'react'
+import { SendIcon, Loader2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import { MinChatInput } from './input/min-chat-input'
 
 interface BaseChatInputProps {
-  onSend: (message: string) => void | Promise<void>;
-  isLoading?: boolean;
-  placeholder?: string;
-  className?: string;
+  onSend: (message: string) => void | Promise<void>
+  isLoading?: boolean
+  placeholder?: string
+  className?: string
 }
 
 export function BaseChatInput({
   onSend,
   isLoading = false,
-  placeholder = "输入消息...",
+  placeholder = '输入消息...',
   className,
 }: BaseChatInputProps) {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('')
 
   const handleSend = async () => {
-    if (!message.trim() || isLoading) return;
+    if (!message.trim() || isLoading) return
 
-    const currentMessage = message;
-    setMessage("");
-    await onSend(currentMessage.trim());
-  };
+    const currentMessage = message
+    setMessage('')
+    await onSend(currentMessage.trim())
+  }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSend()
     }
-  };
+  }
 
   return (
-    <div className={cn("flex gap-2", className)}>
+    <div className={cn('flex gap-2', className)}>
       <MinChatInput
         value={message}
         onChange={setMessage}
@@ -59,5 +59,5 @@ export function BaseChatInput({
         )}
       </Button>
     </div>
-  );
+  )
 }

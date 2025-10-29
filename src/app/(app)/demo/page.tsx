@@ -5,13 +5,19 @@ import { trpc } from '@/server/api/trpc-client'
 import { signIn, signUp, signOut, useSession } from '@/server/auth/auth-client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 
 /**
  * Demo 页面
- * 
+ *
  * 这个页面演示了如何使用以下技术栈：
  * - Prisma: 数据库 ORM
  * - better-auth: 身份认证（基于 cookie）
@@ -20,16 +26,16 @@ import { toast } from 'sonner'
  */
 export default function DemoPage() {
   // ============ better-auth 认证相关 ============
-  
+
   // 使用 better-auth 的 useSession hook 获取当前登录用户信息
   const { data: session, isPending: isSessionLoading } = useSession()
-  
+
   // 登录表单状态
   const [loginForm, setLoginForm] = useState({
     email: '',
     password: '',
   })
-  
+
   // 注册表单状态
   const [registerForm, setRegisterForm] = useState({
     name: '',
@@ -38,22 +44,20 @@ export default function DemoPage() {
   })
 
   // ============ tRPC + React Query 数据获取 ============
-  
+
   // 获取用户列表（公开接口，无需登录）
   // trpc.user.list.useQuery() 返回 React Query 的 query 结果
   const { data: users, isLoading: usersLoading } = trpc.user.list.useQuery()
-  
+
   // 获取当前用户信息（受保护接口，需要登录）
   // enabled: !!session?.user 表示只有在用户登录时才执行查询
-  const { data: currentUser, isLoading: currentUserLoading } = trpc.user.me.useQuery(
-    undefined,
-    {
+  const { data: currentUser, isLoading: currentUserLoading } =
+    trpc.user.me.useQuery(undefined, {
       enabled: !!session?.user, // 只有登录后才查询
-    }
-  )
-  
+    })
+
   // ============ tRPC Mutations（数据修改） ============
-  
+
   // 更新用户信息的 mutation
   const updateUserMutation = trpc.user.update.useMutation({
     onSuccess: () => {
@@ -67,7 +71,7 @@ export default function DemoPage() {
   })
 
   // ============ 认证操作处理函数 ============
-  
+
   // 处理登录
   const handleLogin = async () => {
     try {
@@ -139,7 +143,9 @@ export default function DemoPage() {
               <div>
                 <p className="text-sm text-muted-foreground">已登录用户：</p>
                 <p className="font-medium">{session.user.name}</p>
-                <p className="text-sm text-muted-foreground">{session.user.email}</p>
+                <p className="text-sm text-muted-foreground">
+                  {session.user.email}
+                </p>
               </div>
               <Button onClick={handleLogout} variant="outline">
                 退出登录
@@ -230,7 +236,10 @@ export default function DemoPage() {
                   placeholder="••••••••"
                   value={registerForm.password}
                   onChange={(e) =>
-                    setRegisterForm({ ...registerForm, password: e.target.value })
+                    setRegisterForm({
+                      ...registerForm,
+                      password: e.target.value,
+                    })
                   }
                 />
               </div>
@@ -278,7 +287,9 @@ export default function DemoPage() {
                   onClick={handleUpdateUser}
                   disabled={updateUserMutation.isPending}
                 >
-                  {updateUserMutation.isPending ? '更新中...' : '更新用户信息（示例）'}
+                  {updateUserMutation.isPending
+                    ? '更新中...'
+                    : '更新用户信息（示例）'}
                 </Button>
               </div>
             ) : (
@@ -309,7 +320,9 @@ export default function DemoPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium">{user.name}</p>
-                      <p className="text-sm text-muted-foreground">{user.email}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {user.email}
+                      </p>
                     </div>
                     <div className="text-sm text-muted-foreground">
                       {new Date(user.createdAt).toLocaleDateString('zh-CN')}

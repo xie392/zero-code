@@ -44,7 +44,7 @@ const techStack = {
       color: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300',
     },
     {
-      name: 'Radix UI',
+      name: 'Shadcn UI',
       icon: '🔧',
       color:
         'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
@@ -54,8 +54,7 @@ const techStack = {
     {
       name: 'Next.js API',
       icon: '▲',
-      color:
-        'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
+      color: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
     },
     {
       name: 'Prisma ORM',

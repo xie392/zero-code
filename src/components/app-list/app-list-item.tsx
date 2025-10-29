@@ -1,13 +1,12 @@
 'use client'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { EyeIcon, ThumbsUpIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import type { Project } from '@/types/project'
+import type { ProjectListItem } from '@/types/project'
+import Image from 'next/image'
 
 interface AppItemProps {
-  project: Project
+  project: ProjectListItem
 }
 
 export function AppItem({ project }: AppItemProps) {
@@ -24,7 +23,7 @@ export function AppItem({ project }: AppItemProps) {
         onClick={handleOpen}
       >
         {project.thumbnail ? (
-          <img
+          <Image
             src={project.thumbnail}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             alt={project.name}
@@ -65,7 +64,10 @@ export function AppItem({ project }: AppItemProps) {
         >
           {project.name}
         </h3>
-        <p className="text-sm text-gray-500 line-clamp-2" title={project.prompt}>
+        <p
+          className="text-sm text-gray-500 line-clamp-2"
+          title={project.prompt}
+        >
           {project.prompt}
         </p>
 

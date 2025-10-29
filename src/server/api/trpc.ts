@@ -6,10 +6,10 @@ import type { Session, User } from 'better-auth/types'
 
 /**
  * 1. 创建 tRPC Context
- * 
+ *
  * 这是在每个 tRPC 请求时创建的上下文对象
  * 包含了请求相关的信息，如数据库连接、用户会话等
- * 
+ *
  * @see https://trpc.io/docs/server/context
  */
 export const createContext = async (opts: FetchCreateContextFnOptions) => {
@@ -34,7 +34,7 @@ export const createContext = async (opts: FetchCreateContextFnOptions) => {
 
 /**
  * 2. 初始化 tRPC
- * 
+ *
  * 创建 tRPC 实例，这个实例在整个应用中只初始化一次
  */
 const t = initTRPC.context<typeof createContext>().create()

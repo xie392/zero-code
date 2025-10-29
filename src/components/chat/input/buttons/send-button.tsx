@@ -1,44 +1,44 @@
-"use client";
+'use client'
 
-import { SendIcon } from "lucide-react";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { Button, ButtonProps } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { useStreamGenerate } from "@/hooks/use-stream-generate";
+import { SendIcon } from 'lucide-react'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+import { Button, ButtonProps } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import { useStreamGenerate } from '@/hooks/use-stream-generate'
 
 interface SendButtonProps extends ButtonProps {
-  message: string;
+  message: string
 }
 
 export function SendButton({ message, className, ...props }: SendButtonProps) {
-  const router = useRouter();
+  const router = useRouter()
 
   const { generate, isGenerating } = useStreamGenerate({
     onComplete: (data) => {
       if (data.projectId) {
-        router.push(`/workspace/${data.projectId}`);
+        router.push(`/workspace/${data.projectId}`)
       }
     },
     onError: (error) => {
-      toast.error(`生成失败: ${error}`);
+      toast.error(`生成失败: ${error}`)
     },
-  });
+  })
 
   const handleSend = async () => {
-    if (!message.trim() || isGenerating) return;
+    if (!message.trim() || isGenerating) return
 
     try {
-      await generate(message);
+      await generate(message)
     } catch (error) {
-      console.error("发送失败:", error);
+      console.error('发送失败:', error)
     }
-  };
+  }
 
   return (
     <Button
       size="icon"
-      className={cn("size-8 rounded-lg", className)}
+      className={cn('size-8 rounded-lg', className)}
       disabled={!message.trim().length || isGenerating}
       onClick={handleSend}
       {...props}
@@ -49,5 +49,5 @@ export function SendButton({ message, className, ...props }: SendButtonProps) {
         <SendIcon size={20} />
       )}
     </Button>
-  );
+  )
 }

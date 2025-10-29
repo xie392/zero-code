@@ -1,4 +1,4 @@
-import { SiteAppHeader } from "@/components/layout/site-app-header";
+import { SiteAppHeader } from '@/components/layout/site-app-header'
 
 export default function RootLayout({ children }: LayoutRootProps) {
   return (
@@ -6,5 +6,5 @@ export default function RootLayout({ children }: LayoutRootProps) {
       <SiteAppHeader />
       {children}
     </main>
-  );
+  )
 }

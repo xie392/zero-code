@@ -1,10 +1,10 @@
-import * as React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { toast } from "sonner";
+import * as React from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+import { toast } from 'sonner'
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -20,28 +20,25 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 // import { updateUser } from '@/api/yonghuguanli'
 
 const formSchema = z.object({
-  name: z
-    .string()
-    .min(1, "用户名不能为空")
-    .max(50, "用户名不能超过50个字符"),
-  email: z.string().email("请输入有效的邮箱地址"),
+  name: z.string().min(1, '用户名不能为空').max(50, '用户名不能超过50个字符'),
+  email: z.string().email('请输入有效的邮箱地址'),
   image: z.string().optional(),
-});
+})
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 interface UserEditDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  user: API.User | null;
-  onSuccess?: () => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  user: API.User | null
+  onSuccess?: () => void
 }
 
 export function UserEditDialog({
@@ -50,31 +47,31 @@ export function UserEditDialog({
   user,
   onSuccess,
 }: UserEditDialogProps) {
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      image: "",
+      name: '',
+      email: '',
+      image: '',
     },
-  });
+  })
 
   // 当用户数据变化时更新表单
   React.useEffect(() => {
     if (user && open) {
       form.reset({
-        name: user.name || "",
-        email: user.email || "",
-        image: user.image || "",
-      });
+        name: user.name || '',
+        email: user.email || '',
+        image: user.image || '',
+      })
     }
-  }, [user, open, form]);
+  }, [user, open, form])
 
   const onSubmit = async (values: FormValues) => {
-    console.log("提交值:", values);
-    setLoading(true);
+    console.log('提交值:', values)
+    setLoading(true)
     try {
       // const response = await updateUser({
       //     ...values,
@@ -88,17 +85,17 @@ export function UserEditDialog({
       //     toast.error(response.data?.message || '更新失败')
       // }
     } catch (error) {
-      console.error("更新用户失败:", error);
-      toast.error("更新用户失败，请稍后重试");
+      console.error('更新用户失败:', error)
+      toast.error('更新用户失败，请稍后重试')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleCancel = () => {
-    form.reset();
-    onOpenChange(false);
-  };
+    form.reset()
+    onOpenChange(false)
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -114,11 +111,11 @@ export function UserEditDialog({
             <div className="flex justify-center">
               <Avatar className="h-16 w-16">
                 <AvatarImage
-                  src={form.watch("image") || undefined}
-                  alt={form.watch("name")}
+                  src={form.watch('image') || undefined}
+                  alt={form.watch('name')}
                 />
                 <AvatarFallback>
-                  {form.watch("name")?.charAt(0)?.toUpperCase() || "U"}
+                  {form.watch('name')?.charAt(0)?.toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
             </div>
@@ -175,12 +172,12 @@ export function UserEditDialog({
                 取消
               </Button>
               <Button type="submit" disabled={loading}>
-                {loading ? "保存中..." : "保存"}
+                {loading ? '保存中...' : '保存'}
               </Button>
             </DialogFooter>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

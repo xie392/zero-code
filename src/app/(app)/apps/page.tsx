@@ -1,4 +1,4 @@
-"use client";
+'use client'
 // import { useEffect } from "react";
 
 export default function AppsPage() {
@@ -16,5 +16,5 @@ export default function AppsPage() {
   //     });
   // }, []);
 
-  return "Apps";
+  return 'Apps'
 }

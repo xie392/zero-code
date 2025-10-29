@@ -1,29 +1,38 @@
 /**
  * 项目相关类型定义
+ * 直接使用 Prisma 生成的类型，避免重复定义
  */
 
-export type ProjectStatus = 'GENERATING' | 'COMPLETED' | 'ERROR'
+import type { project, chat_message, ProjectStatus } from '@prisma/client'
 
-export interface Project {
-  id: string
-  name: string
-  userId: string
-  prompt: string
-  htmlContent: string | null
-  status: ProjectStatus
-  thumbnail: string | null
-  createdAt: Date | string
-  updatedAt: Date | string
+// 导出 Prisma 生成的类型
+export type { ProjectStatus }
+export type Project = project
+export type ChatMessage = chat_message
+
+/**
+ * 将 Date 类型转换为 string（用于序列化后的数据）
+ */
+type SerializedDates<T> = {
+  [K in keyof T]: T[K] extends Date ? string : T[K]
 }
 
-export interface ChatMessage {
-  id: string
-  projectId: string
-  role: 'user' | 'assistant' | 'system'
-  content: string
-  metadata?: Record<string, any>
-  createdAt: Date | string
-}
+/**
+ * Project list item type (subset of Project for list views)
+ * 使用 string 类型的日期，因为 TRPC 会序列化 Date 为 string
+ */
+export type ProjectListItem = SerializedDates<
+  Pick<
+    Project,
+    | 'id'
+    | 'name'
+    | 'prompt'
+    | 'status'
+    | 'thumbnail'
+    | 'createdAt'
+    | 'updatedAt'
+  >
+>
 
 export interface CreateProjectRequest {
   prompt: string

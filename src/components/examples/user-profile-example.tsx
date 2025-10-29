@@ -3,7 +3,13 @@
 import { useState } from 'react'
 import { trpc } from '@/server/api/trpc-client'
 import { useSession } from '@/server/auth/auth-client'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,7 +17,7 @@ import { toast } from 'sonner'
 
 /**
  * 用户个人资料示例组件
- * 
+ *
  * 展示如何使用受保护的 tRPC 接口
  * 需要用户登录后才能访问
  */
@@ -50,7 +56,7 @@ export function UserProfileExample() {
   // 处理表单提交
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!formData.name.trim()) {
       toast.error('请输入新的姓名')
       return

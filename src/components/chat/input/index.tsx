@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import { ImageIcon, MicIcon, PaperclipIcon, SparklesIcon } from "lucide-react";
-import { TooltipButton } from "@/components/ui/tooltip-button";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
-import { useState } from "react";
-import { SendButton } from "./buttons/send-button";
-import { MinChatInput } from "./input/min-chat-input";
+import { ImageIcon, MicIcon, PaperclipIcon, SparklesIcon } from 'lucide-react'
+import { TooltipButton } from '@/components/ui/tooltip-button'
+import { Textarea } from '@/components/ui/textarea'
+import { toast } from 'sonner'
+import { useState } from 'react'
+import { SendButton } from './buttons/send-button'
+import { MinChatInput } from './input/min-chat-input'
 
 export function ChatInput() {
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState<string>('')
 
   const todo = () => {
-    toast.info("功能暂未开放");
-  };
+    toast.info('功能暂未开放')
+  }
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -53,5 +53,5 @@ export function ChatInput() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,7 +1,7 @@
-import { z } from "zod";
-import { prisma } from "@/server/prisma";
-import { protectedProcedure, router } from "../trpc";
-import { TRPCError } from "@trpc/server";
+import { z } from 'zod'
+import { prisma } from '@/server/prisma'
+import { protectedProcedure, router } from '../trpc'
+import { TRPCError } from '@trpc/server'
 
 export const projectRouter = router({
   /**
@@ -10,8 +10,8 @@ export const projectRouter = router({
   getById: protectedProcedure
     .input(
       z.object({
-        id: z.string().min(1, "项目 ID 不能为空"),
-      })
+        id: z.string().min(1, '项目 ID 不能为空'),
+      }),
     )
     .query(async ({ ctx, input }) => {
       const project = await ctx.prisma.project.findUnique({
@@ -22,45 +22,47 @@ export const projectRouter = router({
         include: {
           messages: {
             orderBy: {
-              createdAt: "asc",
+              createdAt: 'asc',
             },
           },
         },
-      });
+      })
 
       if (!project) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "项目不存在",
-        });
+          code: 'NOT_FOUND',
+          message: '项目不存在',
+        })
       }
 
       // 验证权限
       if (project.userId !== ctx.user.id) {
         throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "无权访问此项目",
-        });
+          code: 'FORBIDDEN',
+          message: '无权访问此项目',
+        })
       }
-      
+
       return {
         ...project,
-        messages: project.messages.map((msg: {
-          id: string;
-          projectId: string;
-          role: string;
-          content: string;
-          metadata: any;
-          createdAt: Date;
-        }) => ({
-          id: msg.id,
-          projectId: msg.projectId,
-          role: msg.role as "user" | "assistant" | "system",
-          content: msg.content,
-          metadata: msg.metadata as Record<string, any> | undefined,
-          createdAt: msg.createdAt,
-        })),
-      };
+        messages: project.messages.map(
+          (msg: {
+            id: string
+            projectId: string
+            role: string
+            content: string
+            metadata: any
+            createdAt: Date
+          }) => ({
+            id: msg.id,
+            projectId: msg.projectId,
+            role: msg.role as 'user' | 'assistant' | 'system',
+            content: msg.content,
+            metadata: msg.metadata as Record<string, any> | undefined,
+            createdAt: msg.createdAt,
+          }),
+        ),
+      }
     }),
 
   /**
@@ -73,11 +75,11 @@ export const projectRouter = router({
           limit: z.number().min(1).max(100).default(20),
           cursor: z.string().optional(),
         })
-        .optional()
+        .optional(),
     )
     .query(async ({ ctx, input }) => {
-      const limit = input?.limit ?? 20;
-      const cursor = input?.cursor;
+      const limit = input?.limit ?? 20
+      const cursor = input?.cursor
 
       const projects = await prisma.project.findMany({
         where: {
@@ -87,7 +89,7 @@ export const projectRouter = router({
         take: limit + 1,
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
-          createdAt: "desc",
+          createdAt: 'desc',
         },
         select: {
           id: true,
@@ -98,18 +100,18 @@ export const projectRouter = router({
           createdAt: true,
           updatedAt: true,
         },
-      });
+      })
 
-      let nextCursor: string | undefined = undefined;
+      let nextCursor: string | undefined = undefined
       if (projects.length > limit) {
-        const nextItem = projects.pop();
-        nextCursor = nextItem?.id;
+        const nextItem = projects.pop()
+        nextCursor = nextItem?.id
       }
 
       return {
         projects,
         nextCursor,
-      };
+      }
     }),
 
   /**
@@ -118,26 +120,26 @@ export const projectRouter = router({
   delete: protectedProcedure
     .input(
       z.object({
-        id: z.string().min(1, "项目 ID 不能为空"),
-      })
+        id: z.string().min(1, '项目 ID 不能为空'),
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const project = await prisma.project.findUnique({
         where: { id: input.id },
-      });
+      })
 
       if (!project) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "项目不存在",
-        });
+          code: 'NOT_FOUND',
+          message: '项目不存在',
+        })
       }
 
       if (project.userId !== ctx.user.id) {
         throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "无权删除此项目",
-        });
+          code: 'FORBIDDEN',
+          message: '无权删除此项目',
+        })
       }
 
       // 软删除
@@ -146,9 +148,9 @@ export const projectRouter = router({
         data: {
           deletedAt: new Date(),
         },
-      });
+      })
 
-      return { success: true };
+      return { success: true }
     }),
 
   /**
@@ -157,31 +159,31 @@ export const projectRouter = router({
   update: protectedProcedure
     .input(
       z.object({
-        id: z.string().min(1, "项目 ID 不能为空"),
-        name: z.string().min(1, "项目名称不能为空").optional(),
+        id: z.string().min(1, '项目 ID 不能为空'),
+        name: z.string().min(1, '项目名称不能为空').optional(),
         thumbnail: z.string().optional(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const project = await prisma.project.findUnique({
         where: { id: input.id },
-      });
+      })
 
       if (!project) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "项目不存在",
-        });
+          code: 'NOT_FOUND',
+          message: '项目不存在',
+        })
       }
 
       if (project.userId !== ctx.user.id) {
         throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "无权修改此项目",
-        });
+          code: 'FORBIDDEN',
+          message: '无权修改此项目',
+        })
       }
 
-      const { id, ...updateData } = input;
+      const { id, ...updateData } = input
 
       const updatedProject = await prisma.project.update({
         where: { id },
@@ -189,8 +191,8 @@ export const projectRouter = router({
           ...updateData,
           updatedAt: new Date(),
         },
-      });
+      })
 
-      return updatedProject;
+      return updatedProject
     }),
-});
+})

@@ -3,7 +3,7 @@ import { publicProcedure, protectedProcedure, router } from '../trpc'
 
 /**
  * 文章路由器（示例）
- * 
+ *
  * 这是一个示例路由器，展示如何创建 CRUD 操作
  * 实际使用时需要先创建对应的数据库表
  */
@@ -27,7 +27,7 @@ export const postRouter = router({
       //   cursor: input?.cursor ? { id: input.cursor } : undefined,
       //   orderBy: { created_at: 'desc' },
       // })
-      
+
       return {
         posts: [],
         nextCursor: null,
@@ -54,7 +54,7 @@ export const postRouter = router({
       //     author_id: ctx.user.id, // 使用当前登录用户的 ID
       //   },
       // })
-      
+
       return {
         message: '这是一个示例接口，需要先创建 post 表',
         userId: ctx.user.id,

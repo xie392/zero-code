@@ -1,16 +1,16 @@
 import { config } from 'dotenv'
-import { defineConfig, env } from "prisma/config";
+import { defineConfig, env } from 'prisma/config'
 
 // 加载 .env.local 文件
 config({ path: '.env.local' })
 
 export default defineConfig({
-  schema: "prisma/schema.prisma",
+  schema: 'prisma/schema.prisma',
   migrations: {
-    path: "prisma/migrations",
+    path: 'prisma/migrations',
   },
-  engine: "classic",
+  engine: 'classic',
   datasource: {
-    url: env("DATABASE_URL"),
+    url: env('DATABASE_URL'),
   },
-});
+})

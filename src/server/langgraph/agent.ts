@@ -3,7 +3,12 @@
  */
 
 import { ChatOpenAI } from '@langchain/openai'
-import { StateGraph, MessagesAnnotation, START, END } from '@langchain/langgraph'
+import {
+  StateGraph,
+  MessagesAnnotation,
+  START,
+  END,
+} from '@langchain/langgraph'
 import { AIMessage } from '@langchain/core/messages'
 import { SYSTEM_PROMPT, generateUserPrompt } from './prompts'
 
@@ -126,7 +131,7 @@ function extractHtmlFromResponse(response: string): string {
  */
 export async function* modifyHtmlStream(
   currentHtml: string,
-  userInstruction: string
+  userInstruction: string,
 ) {
   const model = new ChatOpenAI({
     modelName: process.env.DEEPSEEK_MODEL || 'deepseek-chat',

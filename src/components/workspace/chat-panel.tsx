@@ -1,10 +1,10 @@
-"use client";
+'use client'
 
-import { useState, useRef, useEffect } from "react";
-import type { ChatMessage } from "@/types/project";
-import { ChatMessage as ChatMessageComponent } from "@/components/chat/message/chat-message";
-import { BaseChatInput } from "@/components/chat/input/base-chat-input";
-import { useStreamGenerate } from "@/hooks/use-stream-generate";
+import { useState, useRef, useEffect } from 'react'
+import type { ChatMessage } from '@/types/project'
+import { ChatMessage as ChatMessageComponent } from '@/components/chat/message/chat-message'
+import { BaseChatInput } from '@/components/chat/input/base-chat-input'
+import { useStreamGenerate } from '@/hooks/use-stream-generate'
 
 interface ChatPanelProps {
   projectId: string
@@ -17,76 +17,76 @@ export function ChatPanel({
   initialMessages,
   onNewHtml,
 }: ChatPanelProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const assistantContentRef = useRef("");
+  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const assistantContentRef = useRef('')
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    scrollToBottom()
+  }, [messages])
 
   const { generate, isGenerating } = useStreamGenerate({
     onChunk: (content) => {
-      assistantContentRef.current += content;
+      assistantContentRef.current += content
       setMessages((prev) => {
-        const newMessages = [...prev];
-        const lastMsg = newMessages[newMessages.length - 1];
-        if (lastMsg?.role === "assistant") {
-          lastMsg.content = assistantContentRef.current;
+        const newMessages = [...prev]
+        const lastMsg = newMessages[newMessages.length - 1]
+        if (lastMsg?.role === 'assistant') {
+          lastMsg.content = assistantContentRef.current
         }
-        return newMessages;
-      });
+        return newMessages
+      })
     },
     onHtml: (html) => {
-      onNewHtml(html);
+      onNewHtml(html)
     },
     onComplete: (data) => {
       if (data.htmlContent) {
-        onNewHtml(data.htmlContent);
+        onNewHtml(data.htmlContent)
       }
     },
     onError: (error) => {
       const errorMessage: ChatMessage = {
         id: Date.now().toString(),
         projectId,
-        role: "assistant",
+        role: 'assistant',
         content: `抱歉，生成失败了: ${error}`,
         createdAt: new Date(),
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      }
+      setMessages((prev) => [...prev, errorMessage])
     },
-  });
+  })
 
   const handleSend = async (message: string) => {
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       projectId,
-      role: "user",
+      role: 'user',
       content: message,
       createdAt: new Date(),
-    };
+    }
 
     const assistantMessage: ChatMessage = {
       id: (Date.now() + 1).toString(),
       projectId,
-      role: "assistant",
-      content: "",
+      role: 'assistant',
+      content: '',
       createdAt: new Date(),
-    };
+    }
 
-    setMessages((prev) => [...prev, userMessage, assistantMessage]);
-    assistantContentRef.current = "";
+    setMessages((prev) => [...prev, userMessage, assistantMessage])
+    assistantContentRef.current = ''
 
     try {
-      await generate(message, projectId);
+      await generate(message, projectId)
     } catch (error) {
-      console.error("发送消息失败:", error);
+      console.error('发送消息失败:', error)
     }
-  };
+  }
 
   return (
     <div className="h-full flex flex-col bg-white">
@@ -117,5 +117,5 @@ export function ChatPanel({
         />
       </div>
     </div>
-  );
+  )
 }

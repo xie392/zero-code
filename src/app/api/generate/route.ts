@@ -98,8 +98,8 @@ async function streamGenerateResponse(projectId: string, prompt: string) {
         // 发送项目 ID
         controller.enqueue(
           encoder.encode(
-            `data: ${JSON.stringify({ type: 'project_id', projectId })}\n\n`
-          )
+            `data: ${JSON.stringify({ type: 'project_id', projectId })}\n\n`,
+          ),
         )
 
         let assistantMessage = ''
@@ -112,16 +112,16 @@ async function streamGenerateResponse(projectId: string, prompt: string) {
             // 发送流式内容
             controller.enqueue(
               encoder.encode(
-                `data: ${JSON.stringify({ type: 'chunk', content: chunk.content })}\n\n`
-              )
+                `data: ${JSON.stringify({ type: 'chunk', content: chunk.content })}\n\n`,
+              ),
             )
           } else if (chunk.type === 'complete') {
             htmlContent = chunk.htmlContent
             // 发送完成信号
             controller.enqueue(
               encoder.encode(
-                `data: ${JSON.stringify({ type: 'html', htmlContent })}\n\n`
-              )
+                `data: ${JSON.stringify({ type: 'html', htmlContent })}\n\n`,
+              ),
             )
           }
         }
@@ -147,14 +147,14 @@ async function streamGenerateResponse(projectId: string, prompt: string) {
         // 发送完成信号
         controller.enqueue(
           encoder.encode(
-            `data: ${JSON.stringify({ type: 'complete', projectId, htmlContent })}\n\n`
-          )
+            `data: ${JSON.stringify({ type: 'complete', projectId, htmlContent })}\n\n`,
+          ),
         )
 
         controller.close()
       } catch (error) {
         console.error('Stream error:', error)
-        
+
         // 更新项目状态为错误
         await prisma.project.update({
           where: { id: projectId },
@@ -163,8 +163,8 @@ async function streamGenerateResponse(projectId: string, prompt: string) {
 
         controller.enqueue(
           encoder.encode(
-            `data: ${JSON.stringify({ type: 'error', error: 'Generation failed' })}\n\n`
-          )
+            `data: ${JSON.stringify({ type: 'error', error: 'Generation failed' })}\n\n`,
+          ),
         )
         controller.close()
       }
@@ -186,7 +186,7 @@ async function streamGenerateResponse(projectId: string, prompt: string) {
 async function streamModifyResponse(
   projectId: string,
   currentHtml: string,
-  instruction: string
+  instruction: string,
 ) {
   const encoder = new TextEncoder()
 
@@ -202,15 +202,15 @@ async function streamModifyResponse(
             assistantMessage = chunk.fullContent
             controller.enqueue(
               encoder.encode(
-                `data: ${JSON.stringify({ type: 'chunk', content: chunk.content })}\n\n`
-              )
+                `data: ${JSON.stringify({ type: 'chunk', content: chunk.content })}\n\n`,
+              ),
             )
           } else if (chunk.type === 'complete') {
             htmlContent = chunk.htmlContent
             controller.enqueue(
               encoder.encode(
-                `data: ${JSON.stringify({ type: 'html', htmlContent })}\n\n`
-              )
+                `data: ${JSON.stringify({ type: 'html', htmlContent })}\n\n`,
+              ),
             )
           }
         }
@@ -235,8 +235,8 @@ async function streamModifyResponse(
 
         controller.enqueue(
           encoder.encode(
-            `data: ${JSON.stringify({ type: 'complete', projectId, htmlContent })}\n\n`
-          )
+            `data: ${JSON.stringify({ type: 'complete', projectId, htmlContent })}\n\n`,
+          ),
         )
 
         controller.close()
@@ -244,8 +244,8 @@ async function streamModifyResponse(
         console.error('Modify stream error:', error)
         controller.enqueue(
           encoder.encode(
-            `data: ${JSON.stringify({ type: 'error', error: 'Modification failed' })}\n\n`
-          )
+            `data: ${JSON.stringify({ type: 'error', error: 'Modification failed' })}\n\n`,
+          ),
         )
         controller.close()
       }
