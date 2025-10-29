@@ -1,57 +1,42 @@
-# IDE
-.vscode/
-.idea/
-*.iws
-*.iml
-*.ipr
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# OS
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+*.pem
 
-node_modules/*
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Backend (Java/Spring Boot)
-backend/target/
-backend/.mvn/wrapper/maven-wrapper.jar
-backend/HELP.md
-backend/application-local.yml
-backend/tmp
-backend/.apt_generated
-backend/.classpath
-backend/.factorypath
-backend/.project
-backend/.settings
-backend/.springBeans
-backend/.sts4-cache
-backend/build/
-backend/nbproject/private/
-backend/nbbuild/
-backend/dist/
-backend/nbdist/
-backend/.nb-gradle/
+# local env files
+.env*.local
 
-# Frontend (Node.js/React)
-frontend/node_modules/
-frontend/dist/
-frontend/dist-ssr/
-frontend/*.local
-frontend/logs/
-frontend/*.log
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
-frontend/pnpm-debug.log*
-frontend/lerna-debug.log*
+# vercel
+.vercel
 
-# Environment files
-*.env.local
-*.env.*.local
+# typescript
+*.tsbuildinfo
+next-env.d.ts
 
-# Temporary files
-*.tmp
-*.temp
+translate.local.json
+# Million Lint
+.million
+
+/src/generated/prisma
