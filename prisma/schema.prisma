@@ -88,7 +88,7 @@ model project {
   htmlContent String?  @map("html_content") @db.Text
   
   /// 项目状态
-  status      ProjectStatus @default(GENERATING)
+  status      ProjectStatus @default(CREATED)
   
   /// 缩略图
   thumbnail   String?
@@ -109,6 +109,7 @@ model project {
 
 /// 项目状态
 enum ProjectStatus {
+  CREATED /// 创建中
   GENERATING /// 生成中
   COMPLETED  /// 已完成
   ERROR      /// 出错

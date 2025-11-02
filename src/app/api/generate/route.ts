@@ -13,21 +13,31 @@ export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
   try {
-    // 获取当前用户
     const session = await auth.api.getSession({
       headers: request.headers,
     })
 
     if (!session?.user) {
-      console.error('[Generate API] Unauthorized: No session')
-      return new Response('Unauthorized', { status: 401 })
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized', message: '未登录或登录已过期' }),
+        {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      )
     }
 
     const body = await request.json()
     const { prompt, projectId } = body
 
     if (!prompt || typeof prompt !== 'string') {
-      return new Response('Invalid prompt', { status: 400 })
+      return new Response(
+        JSON.stringify({ error: 'Bad Request', message: '无效的提示词' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      )
     }
 
     // 如果有 projectId，说明是修改现有项目
@@ -37,11 +47,23 @@ export async function POST(request: NextRequest) {
       })
 
       if (!project) {
-        return new Response('Project not found', { status: 404 })
+        return new Response(
+          JSON.stringify({ error: 'Not Found', message: '项目不存在' }),
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json' },
+          },
+        )
       }
 
       if (project.userId !== session.user.id) {
-        return new Response('Forbidden', { status: 403 })
+        return new Response(
+          JSON.stringify({ error: 'Forbidden', message: '无权访问此项目' }),
+          {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' },
+          },
+        )
       }
 
       // 保存用户消息
@@ -80,7 +102,13 @@ export async function POST(request: NextRequest) {
     return streamGenerateResponse(project.id, prompt)
   } catch (error) {
     console.error('Generate API error:', error)
-    return new Response('Internal server error', { status: 500 })
+    return new Response(
+      JSON.stringify({ error: 'Internal Server Error', message: '服务器内部错误' }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
   }
 }
 

@@ -29,8 +29,6 @@ export function useStreamGenerate(options: UseStreamGenerateOptions = {}) {
   const [isGenerating, setIsGenerating] = useState(false)
   const { onChunk, onHtml, onComplete, onError } = options
 
-  // const {} =
-
   const generate = useCallback(
     async (prompt: string, projectId?: string) => {
       setIsGenerating(true)
