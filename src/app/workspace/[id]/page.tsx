@@ -7,6 +7,11 @@ import { ChatPanel } from '@/components/workspace/chat-panel'
 import { Loader2, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { trpc } from '@/server/api/trpc-client'
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/components/ui/resizable'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -72,24 +77,24 @@ export default function WorkspacePage({ params }: PageProps) {
           <p className="text-xs text-gray-500 truncate">{project.prompt}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button>发布</Button>
+          <Button size="sm">发布</Button>
         </div>
       </div>
 
-      {/* 主内容区 */}
       <div className="flex-1 flex overflow-hidden">
-        {/* 左侧：预览区 */}
-        <div className="w-1/2">
-          <PreviewPanel htmlContent={htmlContent || project.htmlContent} />
-        </div>
-        {/* 右侧：对话区 */}
-        <div className="w-1/2">
-          <ChatPanel
-            projectId={project.id}
-            initialMessages={project.messages}
-            onNewHtml={handleNewHtml}
-          />
-        </div>
+        <ResizablePanelGroup direction="horizontal" className="w-full">
+          <ResizablePanel defaultSize={50} minSize={25}>
+            <PreviewPanel htmlContent={htmlContent || project.htmlContent} />
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={50} minSize={25}>
+            <ChatPanel
+              projectId={project.id}
+              initialMessages={project.messages}
+              onNewHtml={handleNewHtml}
+            />
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
     </div>
   )

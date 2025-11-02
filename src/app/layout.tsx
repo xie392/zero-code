@@ -4,8 +4,8 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/sonner'
 
-import QueryProvider from '@/components/providers/query-provider'
-import QueryHydrationProvider from '@/components/providers/query-hydration-provider'
+import QueryProvider from '@/providers/query-provider'
+import QueryHydrationProvider from '@/providers/query-hydration-provider'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

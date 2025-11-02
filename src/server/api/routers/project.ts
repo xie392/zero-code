@@ -1,18 +1,128 @@
-import { z } from 'zod'
 import { prisma } from '@/server/prisma'
 import { protectedProcedure, router } from '../trpc'
 import { TRPCError } from '@trpc/server'
+import {
+  createProjectSchema,
+  deleteProjectSchema,
+  getProjectByIdSchema,
+  listProjectSchema,
+  updateProjectSchema,
+} from '../schemas/project.schema'
 
 export const projectRouter = router({
-  /**
-   * 获取项目详情
-   */
+  create: protectedProcedure
+    .input(createProjectSchema)
+    .mutation(async ({ ctx, input }) => {
+      const project = await prisma.project.create({
+        data: {
+          name: input.name,
+          prompt: input.prompt,
+          userId: ctx.user.id,
+        },
+      })
+      return project
+    }),
+
+  update: protectedProcedure
+    .input(updateProjectSchema)
+    .mutation(async ({ ctx, input }) => {
+      const project = await prisma.project.findUnique({
+        where: { id: input.id },
+      })
+
+      if (!project) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: '项目不存在' })
+      }
+
+      if (project.userId !== ctx.user.id) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: '无权修改此项目' })
+      }
+
+      const { id, ...updateData } = input
+
+      const updatedProject = await prisma.project.update({
+        where: { id },
+        data: {
+          ...updateData,
+          updatedAt: new Date(),
+        },
+      })
+
+      return updatedProject
+    }),
+
+  delete: protectedProcedure
+    .input(deleteProjectSchema)
+    .mutation(async ({ ctx, input }) => {
+      const project = await prisma.project.findUnique({
+        where: { id: input.id },
+      })
+
+      if (!project) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: '项目不存在',
+        })
+      }
+
+      if (project.userId !== ctx.user.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: '无权删除此项目',
+        })
+      }
+
+      await prisma.project.update({
+        where: { id: input.id },
+        data: {
+          deletedAt: new Date(),
+        },
+      })
+
+      return { success: true }
+    }),
+
+  list: protectedProcedure
+    .input(listProjectSchema)
+    .query(async ({ ctx, input }) => {
+      const limit = input?.limit ?? 20
+      const cursor = input?.cursor
+
+      const projects = await prisma.project.findMany({
+        where: {
+          userId: ctx.user.id,
+          deletedAt: null,
+        },
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          id: true,
+          name: true,
+          prompt: true,
+          status: true,
+          thumbnail: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      })
+
+      let nextCursor: string | undefined
+      if (projects.length > limit) {
+        const nextItem = projects.pop()
+        nextCursor = nextItem?.id
+      }
+
+      return {
+        projects,
+        nextCursor,
+      }
+    }),
+
   getById: protectedProcedure
-    .input(
-      z.object({
-        id: z.string().min(1, '项目 ID 不能为空'),
-      }),
-    )
+    .input(getProjectByIdSchema)
     .query(async ({ ctx, input }) => {
       const project = await ctx.prisma.project.findUnique({
         where: {
@@ -35,7 +145,6 @@ export const projectRouter = router({
         })
       }
 
-      // 验证权限
       if (project.userId !== ctx.user.id) {
         throw new TRPCError({
           code: 'FORBIDDEN',
@@ -63,136 +172,5 @@ export const projectRouter = router({
           }),
         ),
       }
-    }),
-
-  /**
-   * 获取当前用户的项目列表（受保护接口）
-   */
-  list: protectedProcedure
-    .input(
-      z
-        .object({
-          limit: z.number().min(1).max(100).default(20),
-          cursor: z.string().optional(),
-        })
-        .optional(),
-    )
-    .query(async ({ ctx, input }) => {
-      const limit = input?.limit ?? 20
-      const cursor = input?.cursor
-
-      const projects = await prisma.project.findMany({
-        where: {
-          userId: ctx.user.id,
-          deletedAt: null,
-        },
-        take: limit + 1,
-        cursor: cursor ? { id: cursor } : undefined,
-        orderBy: {
-          createdAt: 'desc',
-        },
-        select: {
-          id: true,
-          name: true,
-          prompt: true,
-          status: true,
-          thumbnail: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      })
-
-      let nextCursor: string | undefined = undefined
-      if (projects.length > limit) {
-        const nextItem = projects.pop()
-        nextCursor = nextItem?.id
-      }
-
-      return {
-        projects,
-        nextCursor,
-      }
-    }),
-
-  /**
-   * 删除项目（受保护接口）
-   */
-  delete: protectedProcedure
-    .input(
-      z.object({
-        id: z.string().min(1, '项目 ID 不能为空'),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const project = await prisma.project.findUnique({
-        where: { id: input.id },
-      })
-
-      if (!project) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: '项目不存在',
-        })
-      }
-
-      if (project.userId !== ctx.user.id) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: '无权删除此项目',
-        })
-      }
-
-      // 软删除
-      await prisma.project.update({
-        where: { id: input.id },
-        data: {
-          deletedAt: new Date(),
-        },
-      })
-
-      return { success: true }
-    }),
-
-  /**
-   * 更新项目信息（受保护接口）
-   */
-  update: protectedProcedure
-    .input(
-      z.object({
-        id: z.string().min(1, '项目 ID 不能为空'),
-        name: z.string().min(1, '项目名称不能为空').optional(),
-        thumbnail: z.string().optional(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const project = await prisma.project.findUnique({
-        where: { id: input.id },
-      })
-
-      if (!project) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: '项目不存在',
-        })
-      }
-
-      if (project.userId !== ctx.user.id) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: '无权修改此项目',
-        })
-      }
-
-      const { id, ...updateData } = input
-
-      const updatedProject = await prisma.project.update({
-        where: { id },
-        data: {
-          ...updateData,
-          updatedAt: new Date(),
-        },
-      })
-
-      return updatedProject
     }),
 })

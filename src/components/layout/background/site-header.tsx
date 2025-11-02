@@ -8,15 +8,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useUserStore } from '@/stores'
+import { useSession } from '@/server/auth/auth-client'
 
 interface SiteHeaderProps {
   title?: string
 }
 
 export function SiteHeader({ title }: SiteHeaderProps) {
-  const user = useUserStore((state) => state.user)
-  const logout = useUserStore((state) => state.logout)
+  const { data: session } = useSession()
 
   return (
     <header className="flex h-(--header-height) shrink-0 items-center gap-2 sticky top-0 z-50 bg-background border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -33,14 +32,12 @@ export function SiteHeader({ title }: SiteHeaderProps) {
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Avatar>
-                <AvatarImage src={user?.image || undefined} />
-                <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
+                <AvatarImage src={session?.user?.image || undefined} />
+                <AvatarFallback>{session?.user?.name?.[0]}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => logout()}>
-                退出登录
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {}}>退出登录</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

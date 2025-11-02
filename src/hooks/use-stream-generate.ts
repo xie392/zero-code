@@ -17,24 +17,28 @@ interface UseStreamGenerateOptions {
   onError?: (error: string) => void
 }
 
+function generateStream(body: { prompt: string; projectId?: string }) {
+  return fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+}
+
 export function useStreamGenerate(options: UseStreamGenerateOptions = {}) {
   const [isGenerating, setIsGenerating] = useState(false)
   const { onChunk, onHtml, onComplete, onError } = options
+
+  // const {} =
 
   const generate = useCallback(
     async (prompt: string, projectId?: string) => {
       setIsGenerating(true)
 
       try {
-        const response = await fetch('/api/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt, projectId }),
-        })
+        const response = await generateStream({ prompt, projectId })
 
-        if (!response.ok) {
-          throw new Error(`生成失败: ${response.status}`)
-        }
+        if (!response.ok) throw new Error(`生成失败: ${response.status}`)
 
         const reader = response.body?.getReader()
         const decoder = new TextDecoder()

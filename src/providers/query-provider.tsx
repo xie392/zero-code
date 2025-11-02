@@ -58,7 +58,7 @@ export default function QueryProvider({
       <QueryClientProvider client={queryClient}>
         {children}
         {/* 开发环境下显示 React Query DevTools */}
-        <ReactQueryDevtools initialIsOpen={false} />
+        <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
       </QueryClientProvider>
     </trpc.Provider>
   )

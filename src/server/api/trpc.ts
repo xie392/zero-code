@@ -2,7 +2,7 @@ import { initTRPC, TRPCError } from '@trpc/server'
 import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch'
 import { prisma } from '@/server/prisma'
 import { auth } from '@/server/auth/auth'
-import type { Session, User } from 'better-auth/types'
+// import type { Session, User } from 'better-auth/types'
 
 /**
  * 1. 创建 tRPC Context

@@ -4,10 +4,6 @@ import { AppList } from '@/components/app-list/app-list'
 import { cn } from '@/lib/utils'
 
 export default function Home() {
-  //   const { data, isLoading, isError } = useQuery({
-  //     queryKey: ["loginUserInfo"],
-  //     queryFn: loginUserInfoApi,
-  //   });
   return (
     <div className="min-h-screen">
       <div

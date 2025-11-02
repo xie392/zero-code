@@ -13,7 +13,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 import Link from 'next/link'
-import { Home, Info, AppWindowMac } from 'lucide-react'
+// import { Home, Info, AppWindowMac } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useSession, signOut } from '@/server/auth/auth-client'
 
@@ -84,15 +84,8 @@ export function SiteAppHeader() {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <Link href="/user-profile">用户信息</Link>
+                  <Link href="/user">用户信息</Link>
                 </DropdownMenuItem>
-                {/* {session?.user?.role === "admin" && (
-                  <>
-                    <DropdownMenuItem>
-                      <Link href="/admin">后台管理</Link>
-                    </DropdownMenuItem>
-                  </>
-                )} */}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => logout()}>
                   退出登录

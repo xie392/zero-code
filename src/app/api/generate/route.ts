@@ -3,7 +3,7 @@
  * POST /api/generate
  */
 
-import { NextRequest } from 'next/server'
+import type { NextRequest } from 'next/server'
 import { prisma } from '@/server/prisma'
 import { generateHtmlStream, modifyHtmlStream } from '@/server/langgraph/agent'
 import { auth } from '@/server/auth/auth'
@@ -17,8 +17,6 @@ export async function POST(request: NextRequest) {
     const session = await auth.api.getSession({
       headers: request.headers,
     })
-
-    console.log('[Generate API] Session:', session?.user?.id || 'No user')
 
     if (!session?.user) {
       console.error('[Generate API] Unauthorized: No session')

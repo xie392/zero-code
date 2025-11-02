@@ -2,21 +2,11 @@ import { z } from 'zod'
 import { prisma } from '@/server/prisma'
 import { publicProcedure, protectedProcedure, router } from '../trpc'
 
-/**
- * 用户路由器
- *
- * 包含与用户相关的所有 API 接口
- */
 export const userRouter = router({
-  /**
-   * 获取用户列表（公开接口）
-   * 任何人都可以访问
-   */
   list: publicProcedure.query(async () => {
-    // 使用 Prisma 从数据库获取用户列表
     const users = await prisma.user.findMany({
       where: {
-        deletedAt: null, // 只获取未删除的用户
+        deletedAt: null,
       },
       select: {
         id: true,

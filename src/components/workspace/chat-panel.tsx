@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import type { ChatMessage } from '@/types/project'
-import { ChatMessage as ChatMessageComponent } from '@/components/chat/message/chat-message'
-import { BaseChatInput } from '@/components/chat/input/base-chat-input'
+import { ChatMessage as ChatMessageComponent } from '@/components/chat/chat-message'
 import { useStreamGenerate } from '@/hooks/use-stream-generate'
+import { useStickToBottom } from 'use-stick-to-bottom'
+import { ChatInput } from '@/components/chat/chat-input'
 
 interface ChatPanelProps {
   projectId: string
@@ -18,16 +19,8 @@ export function ChatPanel({
   onNewHtml,
 }: ChatPanelProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
   const assistantContentRef = useRef('')
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+  const { scrollRef } = useStickToBottom()
 
   const { generate, isGenerating } = useStreamGenerate({
     onChunk: (content) => {
@@ -96,7 +89,7 @@ export function ChatPanel({
       </div>
 
       {/* 消息列表 */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message) => (
           <ChatMessageComponent
             key={message.id}
@@ -105,16 +98,11 @@ export function ChatPanel({
             timestamp={message.createdAt}
           />
         ))}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* 输入框 */}
-      <div className="border-t p-4 bg-gray-50">
-        <BaseChatInput
-          onSend={handleSend}
-          isLoading={isGenerating}
-          placeholder="输入修改需求..."
-        />
+      <div className="p-4">
+        <ChatInput onSend={handleSend} isLoading={isGenerating} />
       </div>
     </div>
   )

@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
-import { z } from 'zod'
+import type { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'

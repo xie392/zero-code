@@ -9,7 +9,7 @@ import {
   START,
   END,
 } from '@langchain/langgraph'
-import { AIMessage } from '@langchain/core/messages'
+// import { AIMessage } from '@langchain/core/messages'
 import { SYSTEM_PROMPT, generateUserPrompt } from './prompts'
 
 // 定义 Agent 状态
